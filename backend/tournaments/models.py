@@ -16,3 +16,18 @@ class Tournament(models.Model):
 
     def __str__(self):
         return f'{self.title} ({self.created_at})'
+
+class Player(models.Model):
+    name = models.CharField(max_length=30)
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='players')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'tournament'],
+                name='unique_player_name_per_tournament'
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.name} ({self.tournament.title})"
