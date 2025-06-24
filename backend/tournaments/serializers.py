@@ -24,7 +24,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class TournamentCreateSerializer(serializers.ModelSerializer):
-    players = PlayerCreateSerializer(many=True)
+    players = PlayerCreateSerializer(many=True, min_length=1)
 
     class Meta:
         model = Tournament
@@ -51,7 +51,7 @@ class TournamentCreateSerializer(serializers.ModelSerializer):
 
         except IntegrityError:
             raise serializers.ValidationError(
-                {"error": "Duplicate player names in tournament"}
+                {"error": "Duplicate player names in tournament (DB-level)"}
             )
 
         return tournament
