@@ -31,3 +31,49 @@ class Player(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.tournament.title})"
+
+class Match(models.Model):
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='matches')
+
+    round_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(25)]
+    )
+    court_number = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(25)]
+    )
+
+    team_1_score = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(50)],
+        null = True, blank = True
+    )
+
+    team_2_score = models.PositiveIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(50)],
+        null = True, blank = True
+    )
+
+    played = models.BooleanField(default=False)
+
+    players = models.ManyToManyField(
+        'Player',
+        through='MatchPlayer',
+        related_name='matches'
+    )
+
+    def __str__(self):
+        return f"Match R{self.round_number} on Court {self.court_number} (Tournament: {self.tournament.title})"
+
+# implemented to easily get teams of a match and sum points of a player
+class MatchPlayer(models.Model):
+    TEAM_CHOICES = [('team1', 'Team 1'), ('team2', 'Team 2')]
+
+    match = models.ForeignKey('Match', on_delete=models.CASCADE)
+    player = models.ForeignKey('Player', on_delete=models.CASCADE)
+    team = models.CharField(max_length=10, choices=TEAM_CHOICES)
+
+    class Meta:
+        # player cannot play twice in the same match !
+        unique_together = ('match', 'player')
+
+    def __str__(self):
+        return f"{self.player.name} in {self.match} ({self.team})"
