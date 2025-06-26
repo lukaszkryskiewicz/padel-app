@@ -1,10 +1,9 @@
 from django.test import TestCase
-from rest_framework import serializers
 
-from backend.tournaments.models import Tournament, Player
-from backend.tournaments.serializers import TournamentCreateSerializer
-from django.db.utils import IntegrityError
-from unittest.mock import patch
+from backend.tournaments.logic.americano_single import generate_americano_round
+from backend.tournaments.models import Tournament, Player, Match
+from backend.tournaments.serializers import TournamentCreateSerializer, TournamentSerializer, MatchSerializer
+
 
 class TournamentCreateSerializerTest(TestCase):
     def test_create_tournament_with_valid_data(self):
@@ -142,3 +141,115 @@ class TournamentCreateSerializerTest(TestCase):
 
         self.assertIn("Ensure this value is less than or equal to 25.", serializer.errors["number_of_courts"][0])
         self.assertIn("Ensure this value is less than or equal to 50.", serializer.errors["points_per_match"][0])
+
+class TournamentSerializerTest(TestCase):
+    def setUp(self):
+        self.tournament = Tournament.objects.create(
+            title="Turniej testowy",
+            format="Americano",
+            number_of_courts=2,
+            points_per_match=21
+        )
+
+    def test_serialization_without_players(self):
+        """Ensure players field is an empty list when no players are present."""
+        serializer = TournamentSerializer(self.tournament)
+
+        self.assertEqual(serializer.data['players'], [])
+
+
+    def test_serialization_with_players(self):
+        player_1 = Player.objects.create(name="Ania", tournament=self.tournament)
+        player_2 = Player.objects.create(name="Robert", tournament=self.tournament)
+
+        serializer = TournamentSerializer(self.tournament)
+
+        expected_data = {
+            'id': self.tournament.id,
+            'title': "Turniej testowy",
+            'format': "Americano",
+            'number_of_courts': 2,
+            'points_per_match': 21,
+            'created_at': serializer.data['created_at'],
+            'players': [
+                {
+                "id": player_1.id,
+                "name": "Ania",
+                "tournament": self.tournament.id
+                },
+                {
+                    "id": player_2.id,
+                    "name": "Robert",
+                    "tournament": self.tournament.id
+                }
+            ]
+        }
+
+        self.assertEqual(serializer.data, expected_data)
+
+
+class TestMatchSerializer(TestCase):
+    def setUp(self):
+
+        self.tournament = Tournament.objects.create(
+            title="Turniej testowy",
+            format="Americano",
+            number_of_courts=1,
+            points_per_match=21,
+        )
+
+        player_names = ["Ania", "Celina", "Roman", "Dawid", "Robert", "Olga", "Ela", "Piotr"]
+        for name in player_names:
+            Player.objects.create(name=name, tournament=self.tournament)
+
+        generate_americano_round(self.tournament)
+
+    def test_serializer_structure(self):
+        match = Match.objects.filter(tournament = self.tournament).first()
+        serializer = MatchSerializer(match)
+
+        data = serializer.data
+
+        expected_fields = [
+            "id",
+            "round_number",
+            "court_number",
+            "team_1_score",
+            "team_2_score",
+            "played",
+            "players"
+        ]
+
+        for field in expected_fields:
+            self.assertIn(field, data)
+
+        self.assertEqual(len(data["players"]), 4)
+        teams = [player["team"] for player in data["players"]]
+        self.assertEqual(teams.count("team1"), 2)
+        self.assertEqual(teams.count("team2"), 2)
+
+    def test_match_players(self):
+        # generate more matches
+        generate_americano_round(self.tournament)
+        matches = list(Match.objects.filter(tournament=self.tournament))
+
+        self.assertEqual(len(matches), 4)
+
+        for match in matches:
+            serializer = MatchSerializer(match)
+            data = serializer.data
+
+            self.assertEqual(len(data["players"]), 4)
+            teams = [player["team"] for player in data["players"]]
+            self.assertEqual(teams.count("team1"), 2)
+            self.assertEqual(teams.count("team2"), 2)
+
+
+    def test_match_serializer_without_scores(self):
+        match = Match.objects.filter(tournament=self.tournament).first()
+        serializer = MatchSerializer(match)
+        data = serializer.data
+
+        self.assertIsNone(data["team_1_score"])
+        self.assertIsNone(data["team_2_score"])
+        self.assertFalse(data["played"])
