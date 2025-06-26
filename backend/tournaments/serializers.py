@@ -100,6 +100,13 @@ class MatchUpdateSerializer(serializers.ModelSerializer):
         model = Match
         fields = ['id', 'team_1_score', 'team_2_score', 'played']
 
+    def validate(self, data):
+        # Check that if played=True, both scores are provided
+        if data.get('played'):
+            if data.get('team_1_score') is None or data.get('team_2_score') is None:
+                raise serializers.ValidationError("Both scores must be provided if the match is marked as played.")
+        return data
+
 class SingleMatchUpdateSerializer(serializers.Serializer):
     """
     Validates input for a single match when updating a full round of matches.
@@ -130,4 +137,11 @@ class RoundResultsSerializer(serializers.Serializer):
     def validate_results(self, data):
         if not data:
             raise serializers.ValidationError("You must provide at least one match result.")
+
+        for result in data:
+            if not result.get('played'):
+                raise serializers.ValidationError("All matches must be marked as played.")
+            if result.get('team_1_score') is None or result.get('team_2_score') is None:
+                raise serializers.ValidationError("All played matches must have both scores.")
+
         return data
