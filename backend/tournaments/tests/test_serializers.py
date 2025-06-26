@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from backend.tournaments.logic.americano_single import generate_americano_round
-from backend.tournaments.models import Tournament, Player, Match
+from backend.tournaments.models import Tournament, Player, Match, MatchPlayer
 from backend.tournaments.serializers import TournamentCreateSerializer, TournamentSerializer, MatchSerializer, \
     MatchUpdateSerializer, RoundResultsSerializer
 
@@ -12,7 +12,7 @@ class TournamentCreateSerializerTest(TestCase):
         """Should create tournament and players when valid data is provided."""
         data = {
             "title": "Testowe",
-            "format": "Americano",
+            "format": Tournament.TournamentFormat.AMERICANO,
             "number_of_courts": 3,
             "points_per_match": 21,
             "players": [
@@ -31,7 +31,7 @@ class TournamentCreateSerializerTest(TestCase):
         tournament = serializer.save()
 
         self.assertEqual(tournament.title, "Testowe")
-        self.assertEqual(tournament.format, "Americano")
+        self.assertEqual(tournament.format, Tournament.TournamentFormat.AMERICANO)
         self.assertEqual(tournament.number_of_courts, 3)
         self.assertEqual(tournament.points_per_match, 21)
 
@@ -46,7 +46,7 @@ class TournamentCreateSerializerTest(TestCase):
         """Should raise validation error when player names are not unique."""
         data = {
             "title": "Testowe",
-            "format": "Americano",
+            "format": Tournament.TournamentFormat.AMERICANO,
             "number_of_courts": 3,
             "points_per_match": 21,
             "players": [
@@ -70,7 +70,7 @@ class TournamentCreateSerializerTest(TestCase):
         """Should raise validation error when no players are provided."""
         data = {
             "title": "Testowe",
-            "format": "Americano",
+            "format": Tournament.TournamentFormat.AMERICANO,
             "number_of_courts": 3,
             "points_per_match": 21,
             "players": []
@@ -106,7 +106,7 @@ class TournamentCreateSerializerTest(TestCase):
         """Should reject tournaments with courts/points values below minimum allowed."""
         data = {
             "title": "Testowe",
-            "format": "Americano",
+            "format": Tournament.TournamentFormat.AMERICANO,
             "number_of_courts": 0,
             "points_per_match": 0,
             "players": [
@@ -130,7 +130,7 @@ class TournamentCreateSerializerTest(TestCase):
         """Should reject tournaments with courts/points values above maximum allowed."""
         data = {
             "title": "Testowe",
-            "format": "Americano",
+            "format": Tournament.TournamentFormat.AMERICANO,
             "number_of_courts": 100,
             "points_per_match": 60,
             "players": [
@@ -155,7 +155,7 @@ class TournamentSerializerTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Turniej testowy",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=2,
             points_per_match=21
         )
@@ -176,7 +176,7 @@ class TournamentSerializerTest(TestCase):
         expected_data = {
             'id': self.tournament.id,
             'title': "Turniej testowy",
-            'format': "Americano",
+            'format': Tournament.TournamentFormat.AMERICANO,
             'number_of_courts': 2,
             'points_per_match': 21,
             'created_at': serializer.data['created_at'],
@@ -202,7 +202,7 @@ class TestMatchSerializer(TestCase):
 
         self.tournament = Tournament.objects.create(
             title="Turniej testowy",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=1,
             points_per_match=21,
         )
@@ -235,8 +235,8 @@ class TestMatchSerializer(TestCase):
 
         self.assertEqual(len(data["players"]), 4)
         teams = [player["team"] for player in data["players"]]
-        self.assertEqual(teams.count("team1"), 2)
-        self.assertEqual(teams.count("team2"), 2)
+        self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM1), 2)
+        self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM2), 2)
 
     def test_match_players(self):
         """Should return exactly 4 players per match, divided into two teams."""
@@ -252,8 +252,8 @@ class TestMatchSerializer(TestCase):
 
             self.assertEqual(len(data["players"]), 4)
             teams = [player["team"] for player in data["players"]]
-            self.assertEqual(teams.count("team1"), 2)
-            self.assertEqual(teams.count("team2"), 2)
+            self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM1), 2)
+            self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM2), 2)
 
     def test_match_serializer_without_scores(self):
         """Should serialize match with null scores and played=False by default."""
@@ -270,7 +270,7 @@ class TestMatchUpdateSerializer(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Turniej testowy",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=1,
             points_per_match=21,
         )
@@ -345,7 +345,7 @@ class TestRoundResultsSerializer(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Turniej testowy",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=1,
             points_per_match=21,
         )

@@ -8,7 +8,7 @@ class AmericanoLogicTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Testowy Turniej",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=3,
             points_per_match=21
         )
@@ -38,8 +38,8 @@ class AmericanoLogicTest(TestCase):
             self.assertEqual(match.players.count(), 4)
 
             teams = list(MatchPlayer.objects.filter(match=match).values_list("team", flat=True))
-            self.assertEqual(teams.count("team1"), 2)
-            self.assertEqual(teams.count("team2"), 2)
+            self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM1), 2)
+            self.assertEqual(teams.count(MatchPlayer.TeamChoices.TEAM2), 2)
 
     def test_if_round_number_increments(self):
         for i in range(1 , 11):

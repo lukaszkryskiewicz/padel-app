@@ -9,12 +9,12 @@ class TournamentModelTest(TestCase):
         """Should create a Tournament instance with valid data and default settings."""
         tournament = Tournament.objects.create(
             title="Test Tournament",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=4,
             points_per_match=21
         )
         self.assertEqual(tournament.title, "Test Tournament")
-        self.assertEqual(tournament.format, "Americano")
+        self.assertEqual(tournament.format, Tournament.TournamentFormat.AMERICANO)
         self.assertEqual(tournament.number_of_courts, 4)
         self.assertEqual(tournament.points_per_match, 21)
 
@@ -22,7 +22,7 @@ class TournamentModelTest(TestCase):
         """Should return tournament title and created_at in __str__."""
         tournament = Tournament.objects.create(
             title="Example",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=2,
             points_per_match=21
         )
@@ -32,7 +32,7 @@ class PlayerModelTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Player Test Tournament",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=4,
             points_per_match=21
         )
@@ -55,7 +55,7 @@ class PlayerModelTest(TestCase):
         """Should allow players with the same name in different tournaments."""
         tournament = Tournament.objects.create(
             title="Player Test Tournament2",
-            format="Mexicao",
+            format=Tournament.TournamentFormat.MEXICANO,
             number_of_courts=4,
             points_per_match=21
         )
@@ -68,7 +68,7 @@ class PlayerModelTest(TestCase):
 
     def test_player_str_returns_name_and_tournament_title(self):
         """Should return player name and tournament title in __str__."""
-        tournament = Tournament.objects.create(title="Str Test", format="Americano", number_of_courts=1, points_per_match=21)
+        tournament = Tournament.objects.create(title="Str Test", format=Tournament.TournamentFormat.AMERICANO, number_of_courts=1, points_per_match=21)
         player = Player.objects.create(name="Ania", tournament=tournament)
         self.assertIn("Ania", str(player))
         self.assertIn("Str Test", str(player))
@@ -77,7 +77,7 @@ class MatchModelTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Match Test Tournament",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=4,
             points_per_match=21
         )
@@ -129,7 +129,7 @@ class MatchModelTest(TestCase):
 
     def test_match_str_returns_round_and_court_info(self):
         """Should return round number and court number in __str__."""
-        tournament = Tournament.objects.create(title="Str Test", format="Americano", number_of_courts=1, points_per_match=21)
+        tournament = Tournament.objects.create(title="Str Test", format=Tournament.TournamentFormat.AMERICANO, number_of_courts=1, points_per_match=21)
         match = Match.objects.create(tournament=tournament, round_number=1, court_number=2)
         self.assertIn("R1", str(match))
         self.assertIn("Court 2", str(match))
@@ -138,7 +138,7 @@ class MatchPlayerModelTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Match Player Test Tournament",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=4,
             points_per_match=21
         )
@@ -158,16 +158,16 @@ class MatchPlayerModelTest(TestCase):
 
     def test_valid_match_with_four_players(self):
         """Should assign exactly 4 players to a match, 2 per team."""
-        MatchPlayer.objects.create(match=self.match, player=self.player1, team="team1")
-        MatchPlayer.objects.create(match=self.match, player=self.player2, team="team1")
-        MatchPlayer.objects.create(match=self.match, player=self.player3, team="team2")
-        MatchPlayer.objects.create(match=self.match, player=self.player4, team="team2")
+        MatchPlayer.objects.create(match=self.match, player=self.player1, team=MatchPlayer.TeamChoices.TEAM1)
+        MatchPlayer.objects.create(match=self.match, player=self.player2, team=MatchPlayer.TeamChoices.TEAM1)
+        MatchPlayer.objects.create(match=self.match, player=self.player3, team=MatchPlayer.TeamChoices.TEAM2)
+        MatchPlayer.objects.create(match=self.match, player=self.player4, team=MatchPlayer.TeamChoices.TEAM2)
 
         players = self.match.players.all()
         self.assertEqual(players.count(), 4)
 
-        team1_players = MatchPlayer.objects.filter(match=self.match, team="team1").count()
-        team2_players = MatchPlayer.objects.filter(match=self.match, team="team2").count()
+        team1_players = MatchPlayer.objects.filter(match=self.match, team=MatchPlayer.TeamChoices.TEAM1).count()
+        team2_players = MatchPlayer.objects.filter(match=self.match, team=MatchPlayer.TeamChoices.TEAM2).count()
 
         self.assertEqual(team1_players, 2)
         self.assertEqual(team2_players, 2)
@@ -181,11 +181,11 @@ class MatchPlayerModelTest(TestCase):
 
     def test_not_unique_team_members(self):
         """Should raise IntegrityError if the same player is assigned to the same match more than once."""
-        MatchPlayer.objects.create(match=self.match, player=self.player2, team="team1")
+        MatchPlayer.objects.create(match=self.match, player=self.player2, team=MatchPlayer.TeamChoices.TEAM1)
 
         # unique together is checked while saving to db, so full.clean() won't work
         with self.assertRaises(IntegrityError):
-            MatchPlayer.objects.create(match=self.match, player=self.player2, team="team2")
+            MatchPlayer.objects.create(match=self.match, player=self.player2, team=MatchPlayer.TeamChoices.TEAM2)
 
     def test_same_player_can_participate_in_different_matches(self):
         """Should allow the same player to participate in multiple matches within a tournament."""
@@ -195,25 +195,25 @@ class MatchPlayerModelTest(TestCase):
             court_number=1
         )
 
-        MatchPlayer.objects.create(match=self.match, player=self.player1, team="team1")
+        MatchPlayer.objects.create(match=self.match, player=self.player1, team=MatchPlayer.TeamChoices.TEAM1)
 
         try:
-            MatchPlayer.objects.create(match=another_match, player=self.player1, team="team2")
+            MatchPlayer.objects.create(match=another_match, player=self.player1, team=MatchPlayer.TeamChoices.TEAM2)
         except IntegrityError:
             self.fail("Player should be allowed to participate in different matches.")
 
     def test_match_player_str_displays_player_and_team(self):
         """Should include player name and team in MatchPlayer __str__."""
-        tournament = Tournament.objects.create(title="Team Test", format="Americano", number_of_courts=1, points_per_match=21)
+        tournament = Tournament.objects.create(title="Team Test", format=Tournament.TournamentFormat.AMERICANO, number_of_courts=1, points_per_match=21)
         player = Player.objects.create(name="Ewa", tournament=tournament)
         match = Match.objects.create(tournament=tournament, round_number=1, court_number=1)
-        mp = MatchPlayer.objects.create(match=match, player=player, team="team1")
+        mp = MatchPlayer.objects.create(match=match, player=player, team=MatchPlayer.TeamChoices.TEAM1)
         self.assertIn("Ewa", str(mp))
-        self.assertIn("team1", str(mp))
+        self.assertIn(MatchPlayer.TeamChoices.TEAM1, str(mp))
 
 class RelationshipTest(TestCase):
     def setUp(self):
-        self.tournament = Tournament.objects.create(title="Rel Test", format="Americano", number_of_courts=1, points_per_match=21)
+        self.tournament = Tournament.objects.create(title="Rel Test", format=Tournament.TournamentFormat.AMERICANO, number_of_courts=1, points_per_match=21)
         self.player = Player.objects.create(name="Zosia", tournament=self.tournament)
         self.match = Match.objects.create(tournament=self.tournament, round_number=1, court_number=1)
 
@@ -227,20 +227,20 @@ class RelationshipTest(TestCase):
 
     def test_player_related_matches(self):
         """Should access matches through player.matches related_name (via MatchPlayer)."""
-        MatchPlayer.objects.create(match=self.match, player=self.player, team="team1")
+        MatchPlayer.objects.create(match=self.match, player=self.player, team=MatchPlayer.TeamChoices.TEAM1)
         self.assertIn(self.match, self.player.matches.all())
 
 class CascadeDeleteTest(TestCase):
     def setUp(self):
         self.tournament = Tournament.objects.create(
             title="Cascade Test",
-            format="Americano",
+            format=Tournament.TournamentFormat.AMERICANO,
             number_of_courts=1,
             points_per_match=21
         )
         self.player = Player.objects.create(name="Jan", tournament=self.tournament)
         self.match = Match.objects.create(tournament=self.tournament, round_number=1, court_number=1)
-        MatchPlayer.objects.create(match=self.match, player=self.player, team="team1")
+        MatchPlayer.objects.create(match=self.match, player=self.player, team=MatchPlayer.TeamChoices.TEAM1)
 
     def test_deleting_tournament_deletes_players_matches_and_matchplayers(self):
         """Deleting a tournament should also delete its players, matches, and match players."""

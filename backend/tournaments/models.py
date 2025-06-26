@@ -2,10 +2,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 class Tournament(models.Model):
-    TOURNAMENT_FORMATS = [('Americano', 'Americano'), ('Mexicano', 'Mexicano')]
+    class TournamentFormat(models.TextChoices):
+        AMERICANO = "Americano", "Americano"
+        MEXICANO = "Mexicano", "Mexicano"
 
     title = models.CharField(max_length=30, default='Padel Tournament')
-    format = models.CharField(max_length=20, choices=TOURNAMENT_FORMATS)
+    format = models.CharField(max_length=20, choices=TournamentFormat.choices)
     number_of_courts = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(25)]
     )
@@ -65,15 +67,23 @@ class Match(models.Model):
 
 # implemented to easily get teams of a match and sum points of a player
 class MatchPlayer(models.Model):
-    TEAM_CHOICES = [('team1', 'Team 1'), ('team2', 'Team 2')]
+    class TeamChoices(models.TextChoices):
+        TEAM1 = 'team1', 'Team 1'
+        TEAM2 = 'team2', 'Team 2'
+
 
     match = models.ForeignKey('Match', on_delete=models.CASCADE)
     player = models.ForeignKey('Player', on_delete=models.CASCADE)
-    team = models.CharField(max_length=10, choices=TEAM_CHOICES)
+    team = models.CharField(max_length=10, choices=TeamChoices.choices)
 
     class Meta:
         # player cannot play twice in the same match !
-        unique_together = ('match', 'player')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['match', 'player'],
+                name='unique_player_per_match'
+            )
+        ]
 
     def __str__(self):
         return f"{self.player.name} in {self.match} ({self.team})"
