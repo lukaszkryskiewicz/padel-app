@@ -1,0 +1,17 @@
+{
+  "header": {
+    "appTitle": "TurniejApp",
+    "login": "Zaloguj się",
+    "register": "Zarejestruj się",
+    "newTournament": "Nowy turniej"
+  },
+  "footer": {
+    "appTitle": "TurniejApp",
+    "appClaim": "Organizuj i zarządzaj swoimi turniejami z łatwością.",
+    "about": "O nas",
+    "contact": "Kontakt",
+    "privacyPolicy": "Polityka prywatności",
+    "terms": "Regulamin",
+    "rights": "Wszelkie prawa zastrzeżone © 2025 Lukasz Kryskiewicz"
+  }
+}
