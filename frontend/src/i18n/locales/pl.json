@@ -1,17 +1,48 @@
 {
   "header": {
-    "appTitle": "TurniejApp",
+    "appTitle": "PadelTournamentApp",
     "login": "Zaloguj się",
     "register": "Zarejestruj się",
     "newTournament": "Nowy turniej"
   },
   "footer": {
-    "appTitle": "TurniejApp",
+    "appTitle": "PadelTournamentApp",
     "appClaim": "Organizuj i zarządzaj swoimi turniejami z łatwością.",
     "about": "O nas",
     "contact": "Kontakt",
     "privacyPolicy": "Polityka prywatności",
     "terms": "Regulamin",
     "rights": "Wszelkie prawa zastrzeżone © 2025 Lukasz Kryskiewicz"
+  },
+  "homePage": {
+    "hero": {
+      "title": {
+        "part1": "Padel Tournament",
+        "part2": "Manager"
+      },
+      "description": "Profesjonalne zarządzanie turniejami padel. Twórz turnieje, zarządzaj meczami i śledź wyniki w jednym miejscu.",
+      "create": "Utwórz Turniej",
+      "demo": "Zobacz Demo"
+    },
+    "features": {
+      "mainTitle": "Dlaczego wybrać nasz system?",
+      "easyManagement": {
+        "title": "Łatwe zarządzanie",
+        "description": "Intuicyjny interfejs do dodawania graczy, tworzenia par i zarządzania meczami."
+      },
+      "flexibleFormats": {
+        "title": "Elastyczne formaty",
+        "description": "Obsługa formatów Americano i Mexicano z konfigurowalnymi systemami punktacji."
+      },
+      "scoreTracking": {
+        "title": "Śledzenie wyników",
+        "description": "Automatyczne obliczanie rankingów i generowanie kolejnych rund turnieju."
+      },
+      "cta": {
+        "title": "Gotowy na start?",
+        "description": "Stwórz swój pierwszy turniej padel już dziś i zobacz jak łatwo możesz zarządzać rozgrywkami.",
+        "button": "Rozpocznij teraz"
+      }
+    }
   }
 }
