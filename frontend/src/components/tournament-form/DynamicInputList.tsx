@@ -5,12 +5,7 @@ import { Button } from '@/components/ui/button';
 import { X, Pencil, Check } from 'lucide-react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-
-interface DynamicInputListProps {
-  name: 'tournament.players' | 'tournament.courts';
-  icon: React.ReactNode;
-  addButtonIcon: React.ReactNode;
-}
+import type { DynamicInputListProps } from '@/types/tournament';
 
 export const DynamicInputList = ({
   name,

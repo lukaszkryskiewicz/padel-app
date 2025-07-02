@@ -2,17 +2,7 @@ import { useState } from 'react';
 import TournamentForm from '@/components/tournament-form/TournamentForm';
 import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-interface TournamentFormValues {
-  title: string;
-  format: 'Americano' | 'Mexicano';
-  scoring: 'Do 11 punktów' | 'Do 21 punktów' | 'Do 24 punktów' | 'Dowolne';
-  resultSorting: 'Po punktach' | 'Po wygranych';
-  teamFormat: 'Gracz' | 'Para';
-  finalMatch: '1 & 2 vs 3 & 4' | '1 & 3 vs 2 & 4' | '1 & 4 vs 2 & 3';
-  players: { name: string }[];
-  courts: { name: string }[];
-}
+import type { TournamentFormValues } from '@/types/tournament';
 
 const TournamentCreatePage = () => {
   const { t } = useTranslation();

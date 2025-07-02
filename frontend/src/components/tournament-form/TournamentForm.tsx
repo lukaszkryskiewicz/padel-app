@@ -5,29 +5,17 @@ import TournamentCourts from './TournamentCourts';
 import { Button } from '../ui/button';
 import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-interface TournamentFormData {
-  title: string;
-  format: 'Americano' | 'Mexicano';
-  scoring: 'Do 11 punktów' | 'Do 21 punktów' | 'Do 24 punktów' | 'Dowolne';
-  resultSorting: 'Po punktach' | 'Po wygranych';
-  teamFormat: 'Gracz' | 'Para';
-  finalMatch: '1 & 2 vs 3 & 4' | '1 & 3 vs 2 & 4' | '1 & 4 vs 2 & 3';
-  players: { name: string }[];
-  courts: { name: string }[];
-}
-
-interface TournamentFormProps {
-  onSubmit: (data: TournamentFormData) => void;
-  isSubmitting: boolean;
-}
+import type {
+  TournamentFormValues,
+  TournamentFormProps,
+} from '@/types/tournament';
 
 const TournamentForm = ({
   onSubmit,
   isSubmitting = false,
 }: TournamentFormProps) => {
   const { t } = useTranslation();
-  const methods = useForm<TournamentFormData>({
+  const methods = useForm<TournamentFormValues>({
     defaultValues: {
       title: '',
       format: 'Americano',

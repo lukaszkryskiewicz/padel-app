@@ -1,20 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useFormContext } from 'react-hook-form';
-
-interface Option {
-  label: string;
-  value: string;
-  id?: string;
-}
-
-interface RadioGroupFieldProps {
-  name: string;
-  label?: string;
-  options: Option[];
-  icon?: React.ReactNode;
-  className?: string;
-}
+import type { RadioGroupFieldProps } from '@/types/tournament';
 
 export const RadioGroupField = ({
   name,

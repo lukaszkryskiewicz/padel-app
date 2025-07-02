@@ -1,10 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-
-interface FormSectionCardProps {
-  icon?: React.ReactNode;
-  title: React.ReactNode;
-  children: React.ReactNode;
-}
+import type { FormSectionCardProps } from '@/types/tournament';
 
 export const FormSectionCard = ({
   icon,
