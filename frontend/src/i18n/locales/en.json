@@ -44,5 +44,45 @@
         "button": "Start Now"
       }
     }
+  },
+  "tournament": {
+    "pageTitle": "Create a Padel Tournament",
+    "pageSubtitle": "Configure your tournament and start playing!",
+    "basicInfo": "Basic Information",
+    "tournamentName": "Tournament Name",
+    "placeholderName": "Enter tournament name...",
+    "tournamentType": "Tournament Type",
+    "scoringSystem": "Scoring System",
+    "scoringLabel": "Scoring",
+    "resultSortingLabel": "Result Sorting",
+    "teamFormatLabel": "Team Format",
+    "finalMatchLabel": "Final Match",
+    "createButton": "Create Tournament",
+    "creating": "Creating..."
+  },
+  "options": {
+    "formats": {
+      "americano": "Americano",
+      "mexicano": "Mexicano"
+    },
+    "scoring": {
+      "to11": "To 11 points",
+      "to21": "To 21 points",
+      "to24": "To 24 points",
+      "custom": "Custom"
+    },
+    "resultSorting": {
+      "points": "By points",
+      "wins": "By wins"
+    },
+    "teamFormat": {
+      "single": "Single",
+      "pair": "Pair"
+    },
+    "finalMatch": {
+      "first": "1 & 2 vs 3 & 4",
+      "second": "1 & 3 vs 2 & 4",
+      "third": "1 & 4 vs 2 & 3"
+    }
   }
 }
