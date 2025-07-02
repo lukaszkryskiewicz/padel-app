@@ -64,7 +64,7 @@ export const TournamentSettings = () => {
           <RadioGroupField
             className="text-sm font-medium"
             name="scoring"
-            label={t('tournament.scoring')}
+            label={t('tournament.scoringLabel')}
             options={[
               { value: 'Do 11 punktów', label: 'Do 11 punktów', id: '11pts' },
               { value: 'Do 21 punktów', label: 'Do 21 punktów', id: '21pts' },
@@ -75,7 +75,7 @@ export const TournamentSettings = () => {
           <RadioGroupField
             className="text-sm font-medium"
             name="resultSorting"
-            label={t('tournament.resultSorting')}
+            label={t('tournament.resultSortingLabel')}
             options={[
               { value: 'Po punktach', label: 'Po punktach', id: 'points' },
               { value: 'Po wygranych', label: 'Po wygranych', id: 'wins' },
@@ -89,14 +89,14 @@ export const TournamentSettings = () => {
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center gap-2 text-gray-800">
             <Users className="w-5 h-5 text-orange-500" />
-            {t('tournament.teamFormat')}
+            {t('tournament.teamFormatLabel')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <RadioGroupField
             className="text-sm font-medium"
             name="teamFormat"
-            label={t('tournament.teamFormat')}
+            label={t('tournament.teamFormatLabel')}
             options={[
               { value: 'Gracz', label: 'Gracz', id: 'player' },
               { value: 'Para', label: 'Para', id: 'pair' },
@@ -104,7 +104,7 @@ export const TournamentSettings = () => {
           />
           <RadioGroupField
             name="finalMatch"
-            label={t('tournament.finalParing')}
+            label={t('tournament.finalMatchLabel')}
             options={[
               {
                 value: '1 & 2 vs 3 & 4',

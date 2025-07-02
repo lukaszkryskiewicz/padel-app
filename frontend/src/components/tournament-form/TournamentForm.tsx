@@ -1,5 +1,6 @@
 import { useForm, FormProvider } from 'react-hook-form';
 import TournamentSettings from './TournamentSettings';
+import TournamentPlayers from './TournamentPlayers';
 import { Button } from '../ui/button';
 import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +52,7 @@ const TournamentForm = ({
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit} className="space-y-6">
           <TournamentSettings />
+          <TournamentPlayers />
           <div className="flex justify-center pt-4">
             <Button
               type="submit"

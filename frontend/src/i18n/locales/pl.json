@@ -58,7 +58,12 @@
     "teamFormatLabel": "Format drużyny",
     "finalMatchLabel": "Końcowe parowanie",
     "createButton": "Stwórz Turniej",
-    "creating": "Tworzenie..."
+    "creating": "Tworzenie...",
+    "playersTitle": "Gracze",
+    "playersSum": "Łącznie graczy",
+    "playerPlaceholder": "Gracz",
+    "player": "Gracz nr "
+    
   },
   "options": {
     "formats": {

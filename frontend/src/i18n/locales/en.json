@@ -58,7 +58,11 @@
     "teamFormatLabel": "Team Format",
     "finalMatchLabel": "Final Match",
     "createButton": "Create Tournament",
-    "creating": "Creating..."
+    "creating": "Creating...",
+    "playersTitle": "Players",
+    "playersSum": "Total players",
+    "playerPlaceholder": "Player",
+    "player": "Player  "
   },
   "options": {
     "formats": {
