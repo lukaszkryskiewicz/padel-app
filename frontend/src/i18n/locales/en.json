@@ -61,8 +61,12 @@
     "creating": "Creating...",
     "playersTitle": "Players",
     "playersSum": "Total players",
-    "playerPlaceholder": "Player",
-    "player": "Player  "
+    "playersPlaceholder": "Player",
+    "playersSingular": "Player  ",
+    "courtsTitle": "Courts",
+    "courtsSum": "Total courts",
+    "courtsPlaceholder": "Court",
+    "courtsSingular": "Court "
   },
   "options": {
     "formats": {
