@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from backend.tournaments.models import Player, Tournament, Match, MatchPlayer
+from backend.tournaments.models import Player, Tournament, Match, MatchPlayer, Court
 from django.db import transaction, IntegrityError
 
 
@@ -18,6 +18,20 @@ class PlayerCreateSerializer(serializers.ModelSerializer):
         model = Player
         fields = ['name']
 
+class CourtSerializer(serializers.ModelSerializer):
+    """Serializer for displaying Court information in a tournament."""
+
+    class Meta:
+        model = Court
+        fields = ['id','name','number','tournament']
+
+class CourtCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating courts during tournament creation."""
+
+    class Meta:
+        model = Court
+        fields = ['name', 'number']
+
 
 class TournamentSerializer(serializers.ModelSerializer):
     """Serializer for displaying tournament details along with players."""
@@ -26,7 +40,8 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tournament
-        fields = ['id', 'title', 'format', 'number_of_courts', 'points_per_match', 'created_at', 'players']
+        fields = ['id', 'title', 'format', 'result_sorting', 'team_format', 'final_match',
+                  'points_per_match', 'created_at', 'players', 'courts']
 
 
 class TournamentCreateSerializer(serializers.ModelSerializer):
@@ -36,21 +51,33 @@ class TournamentCreateSerializer(serializers.ModelSerializer):
     """
 
     players = PlayerCreateSerializer(many=True, min_length=1)
+    courts = CourtCreateSerializer(many=True, min_length=1)
 
     class Meta:
         model = Tournament
-        fields = ['title', 'format', 'number_of_courts', 'points_per_match', 'players']
+        fields = ['title', 'format', 'result_sorting', 'team_format', 'final_match',
+                  'points_per_match', 'players', 'courts']
 
     def validate(self, data):
         names = [player['name'] for player in data['players']]
+        courts_names = [court['name'] for court in data['courts']]
+        courts_numbers = [court['number'] for court in data['courts']]
+
         if len(names) != len(set(names)):
             raise serializers.ValidationError({
                 "players": "Player names must be unique within a tournament."
             })
+
+        if len(courts_names) != len(set(courts_names)) or len(courts_numbers) != len(set(courts_numbers)):
+            raise serializers.ValidationError({
+                "players": "Courts names and numbers must be unique within a tournament."
+            })
+
         return data
 
     def create(self, validated_data):
         players_data = validated_data.pop('players')
+        courts_data = validated_data.pop('courts')
 
         # double check for duplicates - editing players will be possible
         try:
@@ -60,9 +87,12 @@ class TournamentCreateSerializer(serializers.ModelSerializer):
                 for player_data in players_data:
                     Player.objects.create(tournament=tournament, **player_data)
 
+                for court_data in courts_data:
+                    Court.objects.create(tournament=tournament, **court_data)
+
         except IntegrityError:
             raise serializers.ValidationError(
-                {"error": "Duplicate player names in tournament (DB-level)"}
+                {"error": "Duplicate player names or court names/number in tournament (DB-level)"}
             )
 
         return tournament
@@ -83,10 +113,11 @@ class MatchSerializer(serializers.ModelSerializer):
     """
 
     players = serializers.SerializerMethodField()
+    court = CourtSerializer(read_only=True)
 
     class Meta:
         model = Match
-        fields = ['id','round_number', 'court_number',
+        fields = ['id','round_number', 'court',
                   'team_1_score', 'team_2_score', 'played', 'players']
 
     def get_players(self, obj):

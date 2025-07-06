@@ -75,7 +75,7 @@ class Match(models.Model):
     round_number = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(25)]
     )
-    court = models.ForeignKey('Court', on_delete=models.PROTECT, related_name='matches')
+    court = models.ForeignKey('Court', on_delete=models.CASCADE, related_name='matches')
 
     team_1_score = models.PositiveIntegerField(
         validators=[MinValueValidator(0), MaxValueValidator(50)],
