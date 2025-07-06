@@ -4,10 +4,11 @@ from backend.tournaments.models import Match, MatchPlayer
 
 def generate_americano_round(tournament):
     all_players = list(tournament.players.all())
+    all_courts = list(tournament.courts.all())
     played_rounds = tournament.matches.values_list('round_number', flat=True)
     current_round = max(played_rounds) + 1 if played_rounds else 1
 
-    if len(all_players) < 4 or len(all_players) % 4 != 0:
+    if len(all_players) < 4 or len(all_players) % 4 != 0 or len(all_courts) < 1 :
         return
 
     random.shuffle(all_players)
@@ -19,7 +20,7 @@ def generate_americano_round(tournament):
         match = Match.objects.create(
             tournament=tournament,
             round_number=current_round,
-            court_number=(i // 4) + 1,
+            court=all_courts[(i // 4)],
             played=False,
         )
 

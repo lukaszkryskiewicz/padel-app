@@ -1,17 +1,13 @@
 from unittest import TestCase
 
+from backend.tournaments.factories.tournament_factories import TournamentWithRelationsFactory
 from backend.tournaments.logic.americano_single import generate_americano_round
 from backend.tournaments.models import Tournament, Player, Match, MatchPlayer
 
 
 class AmericanoLogicTest(TestCase):
     def setUp(self):
-        self.tournament = Tournament.objects.create(
-            title="Testowy Turniej",
-            format=Tournament.TournamentFormat.AMERICANO,
-            number_of_courts=3,
-            points_per_match=21
-        )
+        self.tournament = TournamentWithRelationsFactory(courts=3)
 
         for i in range(12):
             Player.objects.create(name=f"Gracz{i + 1}", tournament=self.tournament)
