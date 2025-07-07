@@ -5,6 +5,13 @@ import { useFormContext } from 'react-hook-form';
 import { RadioGroupField } from './RadioGroupField';
 import { useTranslation } from 'react-i18next';
 import { FormSectionCard } from './FormCardSection';
+import {
+  FINAL_MATCH_OPTIONS,
+  POINTS_PER_MATCH_OPTIONS,
+  RESULT_SORTING_OPTIONS,
+  TEAM_FORMAT_OPTIONS,
+  TOURNAMENT_FORMAT_OPTIONS,
+} from '@/constants/tournaments';
 
 export const TournamentSettings = () => {
   const { t } = useTranslation();
@@ -36,10 +43,7 @@ export const TournamentSettings = () => {
         <RadioGroupField
           className="text-sm font-medium"
           name="format"
-          options={[
-            { value: 'AMERICANO', label: 'Americano', id: 'americano' },
-            { value: 'MEXICANO', label: 'Mexicano', id: 'mexicano' },
-          ]}
+          options={TOURNAMENT_FORMAT_OPTIONS}
         />
       </FormSectionCard>
 
@@ -52,21 +56,13 @@ export const TournamentSettings = () => {
           className="text-sm font-medium"
           name="pointsPerMatch"
           label={t('tournament.pointsPerMatchLabel')}
-          options={[
-            { value: '11', label: 'Do 11 punktów', id: '11pts' },
-            { value: '21', label: 'Do 21 punktów', id: '21pts' },
-            { value: '24', label: 'Do 24 punktów', id: '24pts' },
-            { value: '0', label: 'Dowolne', id: 'custom' },
-          ]}
+          options={POINTS_PER_MATCH_OPTIONS}
         />
         <RadioGroupField
           className="text-sm font-medium"
           name="resultSorting"
           label={t('tournament.resultSortingLabel')}
-          options={[
-            { value: 'POINTS', label: 'Po punktach', id: 'points' },
-            { value: 'WINS', label: 'Po wygranych', id: 'wins' },
-          ]}
+          options={RESULT_SORTING_OPTIONS}
         />
       </FormSectionCard>
 
@@ -79,31 +75,12 @@ export const TournamentSettings = () => {
           className="text-sm font-medium"
           name="teamFormat"
           label={t('tournament.teamFormatLabel')}
-          options={[
-            { value: 'PLAYER', label: 'Gracz', id: 'player' },
-            { value: 'PAIR', label: 'Para', id: 'pair' },
-          ]}
+          options={TEAM_FORMAT_OPTIONS}
         />
         <RadioGroupField
           name="finalMatch"
           label={t('tournament.finalMatchLabel')}
-          options={[
-            {
-              value: '1',
-              label: '1 & 2 vs 3 & 4',
-              id: 'final1',
-            },
-            {
-              value: '2',
-              label: '1 & 3 vs 2 & 4',
-              id: 'final2',
-            },
-            {
-              value: '3',
-              label: '1 & 4 vs 2 & 3',
-              id: 'final3',
-            },
-          ]}
+          options={FINAL_MATCH_OPTIONS}
         />
       </FormSectionCard>
     </div>

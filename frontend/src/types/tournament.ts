@@ -36,7 +36,7 @@ export interface FormSectionCardProps {
 }
 
 interface Option {
-  label: string;
+  i18nKey: string;
   value: string;
   id?: string;
 }

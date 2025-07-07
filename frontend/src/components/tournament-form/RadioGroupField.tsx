@@ -2,6 +2,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useFormContext } from 'react-hook-form';
 import type { RadioGroupFieldProps } from '@/types/tournament';
+import { useTranslation } from 'react-i18next';
 
 export const RadioGroupField = ({
   name,
@@ -10,6 +11,7 @@ export const RadioGroupField = ({
   icon,
   className,
 }: RadioGroupFieldProps) => {
+  const { t } = useTranslation();
   const { watch, setValue } = useFormContext();
   const selected = watch(name);
 
@@ -25,7 +27,7 @@ export const RadioGroupField = ({
         {options.map((opt) => (
           <div key={opt.value} className="flex items-center space-x-2">
             <RadioGroupItem value={opt.value} id={`${name}-${opt.value}`} />
-            <Label htmlFor={`${name}-${opt.value}`}>{opt.label}</Label>
+            <Label htmlFor={`${name}-${opt.value}`}>{t(opt.i18nKey)}</Label>
           </div>
         ))}
       </RadioGroup>

@@ -71,28 +71,28 @@
     
   },
   "options": {
-    "formats": {
+    "format": {
       "americano": "Americano",
       "mexicano": "Mexicano"
     },
-    "pointPerMatch": {
-      "to11": "Do 11 punktów",
-      "to21": "Do 21 punktów",
-      "to24": "Do 24 punktów",
-      "custom": "Dowolne"
+    "pointsPerMatch": {
+      "11": "Do 11 punktów",
+      "21": "Do 21 punktów",
+      "24": "Do 24 punktów",
+      "any": "Dowolne"
     },
     "resultSorting": {
       "points": "Po punktach",
       "wins": "Po wygranych"
     },
     "teamFormat": {
-      "single": "Gracz",
+      "player": "Gracz",
       "pair": "Para"
     },
     "finalMatch": {
-      "first": "1 & 2 vs 3 & 4",
-      "second": "1 & 3 vs 2 & 4",
-      "third": "1 & 4 vs 2 & 3"
+      "1-2-vs-3-4": "1 & 2 vs 3 & 4",
+      "1-3-vs-2-4": "1 & 3 vs 2 & 4",
+      "1-4-vs-2-3": "1 & 4 vs 2 & 3"
     }
   }
 }
