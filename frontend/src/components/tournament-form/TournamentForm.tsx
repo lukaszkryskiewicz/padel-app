@@ -18,11 +18,11 @@ const TournamentForm = ({
   const methods = useForm<TournamentFormValues>({
     defaultValues: {
       title: '',
-      format: 'Americano',
-      scoring: 'Do 21 punktów',
-      resultSorting: 'Po punktach',
-      teamFormat: 'Gracz',
-      finalMatch: '1 & 3 vs 2 & 4',
+      format: 'AMERICANO',
+      pointsPerMatch: '21',
+      resultSorting: 'POINTS',
+      teamFormat: 'PLAYER',
+      finalMatch: '1',
       players: [],
       courts: [],
     },
@@ -33,6 +33,11 @@ const TournamentForm = ({
       onSubmit(data);
     } else {
       console.log(data);
+      // Domyślna akcja
+      // toast({
+      //   title: 'Turniej utworzony!',
+      //   description: `Nazwa: ${data.title}, Graczy: ${data.players.length}, Kortów: ${data.courts.length}`,
+      // });
     }
   });
 

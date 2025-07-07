@@ -3,7 +3,7 @@ import { DynamicInputList } from './DynamicInputList';
 
 const TournamentPlayers = () => (
   <DynamicInputList
-    name="tournament.players"
+    name="players"
     icon={<User />}
     addButtonIcon={<UserPlus className="w-4 h-4" />}
   />

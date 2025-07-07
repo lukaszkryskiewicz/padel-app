@@ -52,8 +52,8 @@
     "tournamentName": "Tournament Name",
     "placeholderName": "Enter tournament name...",
     "tournamentType": "Tournament Type",
-    "scoringSystem": "Scoring System",
-    "scoringLabel": "Scoring",
+    "pointsPerMatch": "Scoring System",
+    "pointsPerMatchLabel": "Scoring",
     "resultSortingLabel": "Result Sorting",
     "teamFormatLabel": "Team Format",
     "finalMatchLabel": "Final Match",
@@ -66,6 +66,7 @@
     "courtsTitle": "Courts",
     "courtsSum": "Total courts",
     "courtsPlaceholder": "Court",
+    "courtsNumber": "Court number",
     "courtsSingular": "Court "
   },
   "options": {
@@ -73,7 +74,7 @@
       "americano": "Americano",
       "mexicano": "Mexicano"
     },
-    "scoring": {
+    "pointPerMatch": {
       "to11": "To 11 points",
       "to21": "To 21 points",
       "to24": "To 24 points",

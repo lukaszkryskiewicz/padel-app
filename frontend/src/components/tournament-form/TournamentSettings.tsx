@@ -37,8 +37,8 @@ export const TournamentSettings = () => {
           className="text-sm font-medium"
           name="format"
           options={[
-            { value: 'Americano', label: 'Americano', id: 'americano' },
-            { value: 'Mexicano', label: 'Mexicano', id: 'mexicano' },
+            { value: 'AMERICANO', label: 'Americano', id: 'americano' },
+            { value: 'MEXICANO', label: 'Mexicano', id: 'mexicano' },
           ]}
         />
       </FormSectionCard>
@@ -46,17 +46,17 @@ export const TournamentSettings = () => {
       {/* Scoring System */}
       <FormSectionCard
         icon={<Clock className="w-5 h-5 text-orange-500" />}
-        title={t('tournament.scoringSystem')}
+        title={t('tournament.pointsPerMatch')}
       >
         <RadioGroupField
           className="text-sm font-medium"
-          name="scoring"
-          label={t('tournament.scoringLabel')}
+          name="pointsPerMatch"
+          label={t('tournament.pointsPerMatchLabel')}
           options={[
-            { value: 'Do 11 punktów', label: 'Do 11 punktów', id: '11pts' },
-            { value: 'Do 21 punktów', label: 'Do 21 punktów', id: '21pts' },
-            { value: 'Do 24 punktów', label: 'Do 24 punktów', id: '24pts' },
-            { value: 'Dowolne', label: 'Dowolne', id: 'custom' },
+            { value: '11', label: 'Do 11 punktów', id: '11pts' },
+            { value: '21', label: 'Do 21 punktów', id: '21pts' },
+            { value: '24', label: 'Do 24 punktów', id: '24pts' },
+            { value: '0', label: 'Dowolne', id: 'custom' },
           ]}
         />
         <RadioGroupField
@@ -64,8 +64,8 @@ export const TournamentSettings = () => {
           name="resultSorting"
           label={t('tournament.resultSortingLabel')}
           options={[
-            { value: 'Po punktach', label: 'Po punktach', id: 'points' },
-            { value: 'Po wygranych', label: 'Po wygranych', id: 'wins' },
+            { value: 'POINTS', label: 'Po punktach', id: 'points' },
+            { value: 'WINS', label: 'Po wygranych', id: 'wins' },
           ]}
         />
       </FormSectionCard>
@@ -80,8 +80,8 @@ export const TournamentSettings = () => {
           name="teamFormat"
           label={t('tournament.teamFormatLabel')}
           options={[
-            { value: 'Gracz', label: 'Gracz', id: 'player' },
-            { value: 'Para', label: 'Para', id: 'pair' },
+            { value: 'PLAYER', label: 'Gracz', id: 'player' },
+            { value: 'PAIR', label: 'Para', id: 'pair' },
           ]}
         />
         <RadioGroupField
@@ -89,17 +89,17 @@ export const TournamentSettings = () => {
           label={t('tournament.finalMatchLabel')}
           options={[
             {
-              value: '1 & 2 vs 3 & 4',
+              value: '1',
               label: '1 & 2 vs 3 & 4',
               id: 'final1',
             },
             {
-              value: '1 & 3 vs 2 & 4',
+              value: '2',
               label: '1 & 3 vs 2 & 4',
               id: 'final2',
             },
             {
-              value: '1 & 4 vs 2 & 3',
+              value: '3',
               label: '1 & 4 vs 2 & 3',
               id: 'final3',
             },

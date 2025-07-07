@@ -17,7 +17,9 @@ export const DynamicInputList = ({
   const { fields, append, remove } = useFieldArray({ control, name });
   const [editableIndexes, setEditableIndexes] = useState<number[]>([]);
   const isCommittingRef = useRef(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const numberInputRef = useRef<HTMLInputElement>(null);
 
   const isEditable = (index: number) => editableIndexes.includes(index);
   const enableEdit = (index: number) =>
@@ -34,10 +36,18 @@ export const DynamicInputList = ({
   };
 
   const handleAdd = () => {
-    const value = inputRef.current?.value.trim();
-    if (value) {
-      append({ name: value });
-      inputRef.current!.value = '';
+    const nameValue = nameInputRef.current?.value.trim();
+    const numberValue = numberInputRef.current?.value.trim();
+
+    if (name == 'courts') {
+      if (nameValue && numberValue && !isNaN(Number(numberValue))) {
+        append({ name: nameValue, number: Number(numberValue) });
+        nameInputRef.current!.value = '';
+        numberInputRef.current!.value = '';
+      }
+    } else if (nameValue) {
+      append({ name: nameValue });
+      nameInputRef.current!.value = '';
     }
   };
 
@@ -45,15 +55,29 @@ export const DynamicInputList = ({
     <Card className="shadow-lg border-0 bg-white/70 backdrop-blur-sm">
       <CardHeader className="pb-4">
         <CardTitle className="text-gray-800 flex items-center gap-2">
-          {icon} {t(`${name}Title`)}
+          {icon} {t(`tournament.${name}Title`)}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex gap-2 mb-4">
+          {name == 'courts' && (
+            <Input
+              ref={numberInputRef}
+              type="number"
+              className="w-1/5"
+              placeholder={t(`tournament.${name}Number`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleAdd();
+                }
+              }}
+            />
+          )}
           <Input
-            ref={inputRef}
-            className="w-fit"
-            placeholder={t(`${name}Placeholder`)}
+            ref={nameInputRef}
+            className="w-1/2"
+            placeholder={t(`tournament.${name}Placeholder`)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
@@ -78,13 +102,23 @@ export const DynamicInputList = ({
             >
               <span className="mr-2">{index + 1}. </span>
               <Input
-                id={`${name}-${index}`}
+                id={`${name}-${index}-name`}
                 {...register(`${name}.${index}.name`)}
-                placeholder={`${t(`${name}Singular`)} ${index + 1}`}
+                placeholder={`${t(`tournament.${name}Singular`)} ${index + 1}`}
                 disabled={!isEditable(index)}
                 onBlur={() => handleBlur(index)}
                 className="w-1/2 mx-2"
               />
+              {name == 'courts' && (
+                <Input
+                  id={`${name}-${index}-number`}
+                  {...register(`${name}.${index}.number`)}
+                  placeholder={`${t(`tournament.${name}Number`)} ${index + 1}`}
+                  disabled={!isEditable(index)}
+                  onBlur={() => handleBlur(index)}
+                  className="w-1/5 mx-2"
+                />
+              )}
               {isEditable(index) ? (
                 <Button
                   type="button"
@@ -123,7 +157,7 @@ export const DynamicInputList = ({
         </div>
 
         <div className="mt-3 text-sm text-gray-600">
-          {t(`${name}Sum`)} {fields.length}
+          {t(`tournament.${name}Sum`)} {fields.length}
         </div>
       </CardContent>
     </Card>

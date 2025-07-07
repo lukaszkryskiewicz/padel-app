@@ -52,8 +52,8 @@
     "tournamentName": "Nazwa turnieju",
     "placeholderName": "Wpisz nazwę turnieju...",
     "tournamentType": "Typ turnieju",
-    "scoringSystem": "System punktowania",
-    "scoringLabel": "Punktowanie",
+    "pointsPerMatch": "System punktowania",
+    "pointsPerMatchLabel": "Punktowanie",
     "resultSortingLabel": "Sortowanie wyników",
     "teamFormatLabel": "Format drużyny",
     "finalMatchLabel": "Końcowe parowanie",
@@ -66,6 +66,7 @@
     "courtsTitle": "Korty",
     "courtsSum": "Łącznie kortów",
     "courtsPlaceholder": "Kort",
+    "courtsNumber": "Kort nr",
     "courtsSingular": "Kort nr "
     
   },
@@ -74,7 +75,7 @@
       "americano": "Americano",
       "mexicano": "Mexicano"
     },
-    "scoring": {
+    "pointPerMatch": {
       "to11": "Do 11 punktów",
       "to21": "Do 21 punktów",
       "to24": "Do 24 punktów",

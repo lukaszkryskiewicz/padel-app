@@ -4,25 +4,19 @@ export interface Player {
 
 export interface Court {
   name: string;
+  number?: number;
 }
 
-export type TournamentFormat = 'Americano' | 'Mexicano';
-export type ScoringSystem =
-  | 'Do 11 punktów'
-  | 'Do 21 punktów'
-  | 'Do 24 punktów'
-  | 'Dowolne';
-export type ResultSorting = 'Po punktach' | 'Po wygranych';
-export type TeamFormat = 'Gracz' | 'Para';
-export type FinalMatchType =
-  | '1 & 2 vs 3 & 4'
-  | '1 & 3 vs 2 & 4'
-  | '1 & 4 vs 2 & 3';
+export type TournamentFormat = 'AMERICANO' | 'MEXICANO';
+export type PointsPerMatch = '11' | '21' | '24' | '-1';
+export type ResultSorting = 'POINTS' | 'WINS';
+export type TeamFormat = 'PLAYER' | 'PAIR';
+export type FinalMatchType = '1' | '2' | '3';
 
 export interface TournamentFormValues {
   title: string;
   format: TournamentFormat;
-  scoring: ScoringSystem;
+  pointsPerMatch: PointsPerMatch;
   resultSorting: ResultSorting;
   teamFormat: TeamFormat;
   finalMatch: FinalMatchType;
@@ -56,7 +50,7 @@ export interface RadioGroupFieldProps {
 }
 
 export interface DynamicInputListProps {
-  name: 'tournament.players' | 'tournament.courts';
+  name: 'players' | 'courts';
   icon: React.ReactNode;
   addButtonIcon: React.ReactNode;
 }

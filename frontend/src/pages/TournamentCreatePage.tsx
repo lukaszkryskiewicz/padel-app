@@ -3,6 +3,7 @@ import TournamentForm from '@/components/tournament-form/TournamentForm';
 import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TournamentFormValues } from '@/types/tournament';
+import { createTournamentApi } from '@/api/tournaments';
 
 const TournamentCreatePage = () => {
   const { t } = useTranslation();
@@ -12,7 +13,8 @@ const TournamentCreatePage = () => {
     setIsSubmitting(true);
 
     try {
-      console.log('Creating tournament:', data);
+      const response = await createTournamentApi(data);
+      console.log(response);
     } catch (error) {
       console.error('Błąd:', error);
     } finally {
