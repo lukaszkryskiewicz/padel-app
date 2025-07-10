@@ -1,7 +1,7 @@
 import { useForm, FormProvider } from 'react-hook-form';
-import TournamentSettings from './TournamentSettings';
-import TournamentPlayers from './TournamentPlayers';
-import TournamentCourts from './TournamentCourts';
+import TournamentSettings from './sections/TournamentSettings';
+import TournamentPlayers from './sections/TournamentPlayers';
+import TournamentCourts from './sections/TournamentCourts';
 import { Button } from '../ui/button';
 import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

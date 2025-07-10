@@ -2,9 +2,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Clock, Gamepad2, Target, Users } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
-import { RadioGroupField } from './RadioGroupField';
+import { RadioGroupField } from '../shared/RadioGroupField';
 import { useTranslation } from 'react-i18next';
-import { FormSectionCard } from './FormCardSection';
+import { FormSectionCard } from '../shared/FormCardSection';
 import {
   FINAL_MATCH_OPTIONS,
   POINTS_PER_MATCH_OPTIONS,

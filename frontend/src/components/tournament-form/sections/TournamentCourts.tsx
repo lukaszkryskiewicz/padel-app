@@ -1,5 +1,5 @@
 import { Square, Plus } from 'lucide-react';
-import { DynamicInputList } from './DynamicInputList';
+import { DynamicInputList } from '../shared/DynamicInputList';
 
 const TournamentCourts = () => (
   <DynamicInputList

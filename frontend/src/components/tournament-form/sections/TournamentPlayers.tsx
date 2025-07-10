@@ -1,5 +1,5 @@
 import { UserPlus, User } from 'lucide-react';
-import { DynamicInputList } from './DynamicInputList';
+import { DynamicInputList } from '../shared/DynamicInputList';
 
 const TournamentPlayers = () => (
   <DynamicInputList

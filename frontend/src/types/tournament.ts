@@ -22,6 +22,7 @@ export interface TournamentFormValues {
   finalMatch: FinalMatchType;
   players: Player[];
   courts: Court[];
+  createdAt?: Date;
 }
 
 export interface TournamentFormProps {
@@ -36,7 +37,8 @@ export interface FormSectionCardProps {
 }
 
 interface Option {
-  i18nKey: string;
+  i18nKey?: string;
+  label?: string;
   value: string;
   id?: string;
 }
