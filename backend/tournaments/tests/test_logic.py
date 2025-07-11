@@ -58,3 +58,11 @@ class AmericanoLogicTest(TestCase):
         self.assertEqual(Match.objects.filter(tournament=self.tournament).count(), 0)
         self.assertEqual(MatchPlayer.objects.filter(match__tournament=self.tournament).count(), 0)
 
+    def test_generate_round_updates_status(self):
+        tournament = TournamentWithRelationsFactory(players=4, courts=1, matches=0,
+                                                    status=Tournament.TournamentStatus.NEW)
+
+        generate_americano_round(tournament)
+        tournament.refresh_from_db()
+
+        self.assertEqual(tournament.status, Tournament.TournamentStatus.IN_PROGRESS)

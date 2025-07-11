@@ -1,5 +1,5 @@
 import random
-from backend.tournaments.models import Match, MatchPlayer
+from backend.tournaments.models import Match, MatchPlayer, Tournament
 
 
 def generate_americano_round(tournament):
@@ -36,5 +36,9 @@ def generate_americano_round(tournament):
                 player=player,
                 team='team2'
             )
+    # change tournament status after generating first round
+    if tournament.status == Tournament.TournamentStatus.NEW:
+        tournament.status = Tournament.TournamentStatus.IN_PROGRESS
+        tournament.save(update_fields=['status'])
 
 
