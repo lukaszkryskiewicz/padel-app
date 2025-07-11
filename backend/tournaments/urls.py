@@ -17,13 +17,14 @@ Including another URLconf
 from django.urls import path
 
 from backend.tournaments.views import TournamentListCreateView, TournamentRetriveView, MatchListView, \
-    CurrentRoundMatchesView, MatchUpdateView, RoundResultsUpdateView
+    CurrentRoundMatchesView, MatchUpdateView, RoundResultsUpdateView, GenerateRoundView
 
 urlpatterns = [
-    path('tournaments/', TournamentListCreateView.as_view(), name="tournament-list-create"),
-    path('tournament/<int:pk>/', TournamentRetriveView.as_view(), name="tournament-retrieve"),
-    path('tournament/<int:pk>/matches/', MatchListView.as_view(), name="match-list"),
-    path('tournament/<int:tournament_id>/current-round/', CurrentRoundMatchesView.as_view(), name="current-round-matches"),
-    path('tournament/<int:tournament_id>/update-single/<int:pk>/', MatchUpdateView.as_view(), name='single-match-update'),
-    path('tournament/<int:tournament_id>/update-round/', RoundResultsUpdateView.as_view(), name='round-results-update')
+    path('', TournamentListCreateView.as_view(), name="tournament-list-create"),
+    path('<int:pk>/', TournamentRetriveView.as_view(), name="tournament-retrieve"),
+    path('<int:pk>/matches/', MatchListView.as_view(), name="match-list"),
+    path('<int:tournament_id>/current-round/', CurrentRoundMatchesView.as_view(), name="current-round-matches"),
+    path('<int:tournament_id>/update-single/<int:pk>/', MatchUpdateView.as_view(), name='single-match-update'),
+    path('<int:tournament_id>/update-round/', RoundResultsUpdateView.as_view(), name='round-results-update'),
+    path('<int:tournament_id>/generate-round/', GenerateRoundView.as_view(), name='generate-round'),
 ]

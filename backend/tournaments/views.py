@@ -5,7 +5,7 @@ from django.db.models import Max
 
 from .models import Tournament, Match
 from .serializers import TournamentSerializer, MatchUpdateSerializer, RoundResultsSerializer, \
-    TournamentCreateSerializer, MatchSerializer
+    TournamentCreateSerializer, MatchSerializer, GenerateRoundSerializer
 
 
 class TournamentListCreateView(generics.ListCreateAPIView):
@@ -76,3 +76,21 @@ class RoundResultsUpdateView(generics.GenericAPIView):
             match.save()
 
         return Response({"status": "round results updated"}, status=status.HTTP_200_OK)
+
+class GenerateRoundView(generics.CreateAPIView):
+    serializer_class = GenerateRoundSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        tournament = get_object_or_404(Tournament, pk=self.kwargs['tournament_id'])
+        context['tournament'] = tournament
+        return context
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        tournament = serializer.save()
+        return Response(
+            {"detail": "Runda została wygenerowana.", "tournament_id": tournament.id},
+            status=status.HTTP_201_CREATED
+        )
