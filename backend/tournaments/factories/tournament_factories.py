@@ -15,6 +15,7 @@ class TournamentFactory(factory.django.DjangoModelFactory):
     team_format = factory.Faker('random_element', elements=Tournament.TeamFormat.values)
     final_match = factory.Faker('random_element', elements=Tournament.FinalMatch.values)
     points_per_match = factory.Faker('random_int', min=1, max=50)
+    status = Tournament.TournamentStatus.NEW
 
 class CourtFactory(factory.django.DjangoModelFactory):
     class Meta:

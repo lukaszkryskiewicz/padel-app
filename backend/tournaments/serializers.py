@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from backend.tournaments.logic.americano_single import generate_americano_round
 from backend.tournaments.models import Player, Tournament, Match, MatchPlayer, Court
 from django.db import transaction, IntegrityError
 
@@ -37,10 +38,11 @@ class TournamentSerializer(serializers.ModelSerializer):
     """Serializer for displaying tournament details along with players."""
 
     players = PlayerSerializer(many=True, read_only=True)
+    courts = CourtSerializer(many=True, read_only=True)
 
     class Meta:
         model = Tournament
-        fields = ['id', 'title', 'format', 'result_sorting', 'team_format', 'final_match',
+        fields = ['id', 'status', 'title', 'format', 'result_sorting', 'team_format', 'final_match',
                   'points_per_match', 'created_at', 'players', 'courts']
 
 
@@ -176,3 +178,21 @@ class RoundResultsSerializer(serializers.Serializer):
                 raise serializers.ValidationError("All played matches must have both scores.")
 
         return data
+
+class GenerateRoundSerializer(serializers.Serializer):
+
+    def validate_tournament_id(self, data):
+        tournament = self.context.get('tournament')
+        if not tournament:
+            raise serializers.ValidationError("Tournament not found.")
+        # check if there are 4 players and minimum one court
+        if tournament.players.count() < 4 or tournament.players.count() % 4 != 0:
+            raise serializers.ValidationError("Liczba graczy musi być wielokrotnością 4.")
+        if tournament.courts.count() < 1:
+            raise serializers.ValidationError("Brak dostępnych kortów.")
+        return data
+
+    def create(self, validated_data):
+        tournament = self.context['tournament']
+        generate_americano_round(tournament)
+        return tournament  # return tournament with new round

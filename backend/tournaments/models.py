@@ -20,7 +20,13 @@ class Tournament(models.Model):
         ONE_TWO_VS_THREE_FOUR = 2, "1 & 2 vs 3 & 4"
         ONE_FOUR_VS_TWO_THREE = 3, "1 & 4 vs 2 & 3"
 
+    class TournamentStatus(models.TextChoices):
+        NEW = "NEW", _("New")
+        IN_PROGRESS = "IN PROGRESS", _("In progress")
+        FINISHED = "FINISHED", _("Finished")
+
     title = models.CharField(max_length=30, default='Padel Tournament')
+    status = models.CharField(max_length=20, choices=TournamentStatus.choices, default=TournamentStatus.NEW)
     format = models.CharField(max_length=20, choices=TournamentFormat.choices)
     result_sorting = models.CharField(max_length=20, choices=ResultSorting.choices)
     team_format = models.CharField(max_length=20, choices=TeamFormat.choices)

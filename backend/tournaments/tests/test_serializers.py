@@ -13,6 +13,7 @@ class TournamentCreateSerializerTest(TestCase):
         self.data = {
             "title": "Testowe",
             "format": Tournament.TournamentFormat.AMERICANO,
+            "status": Tournament.TournamentStatus.NEW,
             "result_sorting": Tournament.ResultSorting.WINS,
             "team_format": Tournament.TeamFormat.PLAYER,
             "final_match": Tournament.FinalMatch.ONE_THREE_VS_TWO_FOUR,
@@ -126,6 +127,7 @@ class TournamentSerializerTest(TestCase):
         expected_data = {
             'id': self.tournament.id,
             'title': self.tournament.title,
+            'status': self.tournament.status,
             'format': self.tournament.format,
             'result_sorting': self.tournament.result_sorting,
             'team_format': self.tournament.team_format,
