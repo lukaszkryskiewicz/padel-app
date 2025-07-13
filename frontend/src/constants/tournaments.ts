@@ -1,3 +1,31 @@
+export const FORMAT_MAP = {
+  Americano: 'AMERICANO',
+  Mexicano: 'MEXICANO',
+};
+
+export const SCORING_MAP = {
+  'Do 11 punktów': 11,
+  'Do 21 punktów': 21,
+  'Do 24 punktów': 24,
+  Dowolne: null,
+};
+
+export const RESULT_SORTING_MAP = {
+  'Po punktach': 'POINTS',
+  'Po wygranych': 'WINS',
+};
+
+export const TEAM_FORMAT_MAP = {
+  Gracz: 'PLAYER',
+  Para: 'PAIR',
+};
+
+export const FINAL_MATCH_MAP = {
+  '1 & 2 vs 3 & 4': 2,
+  '1 & 3 vs 2 & 4': 1,
+  '1 & 4 vs 2 & 3': 3,
+};
+
 export const TOURNAMENT_FORMAT_OPTIONS = [
   {
     value: 'AMERICANO',
@@ -27,4 +55,14 @@ export const POINTS_PER_MATCH_OPTIONS = [
   { value: '21', i18nKey: 'options.pointsPerMatch.21', id: '21pts' },
   { value: '24', i18nKey: 'options.pointsPerMatch.24', id: '24pts' },
   { value: 'ANY', i18nKey: 'options.pointsPerMatch.any', id: 'any' },
+];
+
+export const STATUS_TOURNAMENT_OPTIONS = [
+  { value: 'NEW', i18nKey: 'options.status.new', id: 'new' },
+  {
+    value: 'IN PROGRESS',
+    i18nKey: 'options.status.inProgress',
+    id: 'inProgress',
+  },
+  { value: 'FINISHED', i18nKey: 'options.status.finished', id: 'finished' },
 ];

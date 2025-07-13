@@ -22,7 +22,12 @@ export interface TournamentFormValues {
   finalMatch: FinalMatchType;
   players: Player[];
   courts: Court[];
-  createdAt?: Date;
+}
+
+export interface TournamentApiValues extends TournamentFormValues {
+  id: number;
+  status: string;
+  createdAt: string;
 }
 
 export interface TournamentFormProps {
@@ -36,7 +41,7 @@ export interface FormSectionCardProps {
   children: React.ReactNode;
 }
 
-interface Option {
+export interface Option {
   i18nKey?: string;
   label?: string;
   value: string;
@@ -55,4 +60,18 @@ export interface DynamicInputListProps {
   name: 'players' | 'courts';
   icon: React.ReactNode;
   addButtonIcon: React.ReactNode;
+}
+
+export interface InfoCardProps {
+  icon: React.ReactNode;
+  title: string;
+  borderColor: string;
+  titleColor: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+export interface InfoItemProps {
+  label: string;
+  value: string | number | React.ReactNode;
 }

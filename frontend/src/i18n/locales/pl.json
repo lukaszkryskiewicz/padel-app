@@ -93,6 +93,39 @@
       "1-2-vs-3-4": "1 & 2 vs 3 & 4",
       "1-3-vs-2-4": "1 & 3 vs 2 & 4",
       "1-4-vs-2-3": "1 & 4 vs 2 & 3"
+    },
+     "status": {
+      "new": "Nowy",
+      "inProgress": "W trakcie",
+      "finished": "Zakończony"
+    }
+  },
+  "dashboard": {
+    "notFound": "Nie znaleziono żadnego turnieju ",
+    "tournamentInfo": "Informacje o turnieju",
+    "firstRound": "Start pierwszej rundy!",
+    "finalStandings": "Klasyfikacja końcowa",
+    "format": "Format",
+    "status": "Status",
+    "settings": "Ustawienia gry",
+    "points": "Punkty w meczu",
+    "timeInfo": "Czas",
+    "createdAt": "Utworzono",
+    "wasCreated": "Turniej został utworzony {{count}} dni temu",
+    "tournamentRules": "Zasady {{format}}",
+    "rules": {
+      "AMERICANO": [
+        "Gracze grają w parze z losowo wybranymi partnerami",
+        "Gracze grają przeciwko losowo wybranym przeciwnikom w kazdym meczu",
+        "Punkty zdobywane indywidualnie przez każdego gracza",
+        "Zwycięzca to gracz z największą liczbą punktów"
+      ],
+      "MEXICANO": [
+        "W pierwszej rundzie gracze grają z losowo wybranym partnerem oraz przecinikami",
+        "W kazdej kolejnej rundzie system dzieli graczy wedlug kryterium punktowego na 4 osobowe grupy, w ramach której następuje losowanie par",
+        "Punkty zdobywane indywidualnie przez każdego gracza",
+        "Zwycięzca to gracz z największą liczbą punktów"
+      ]
     }
   }
 }

@@ -92,6 +92,39 @@
       "1-2-vs-3-4": "1 & 2 vs 3 & 4",
       "1-3-vs-2-4": "1 & 3 vs 2 & 4",
       "1-4-vs-2-3": "1 & 4 vs 2 & 3"
+    },
+    "status": {
+      "new": "New",
+      "inProgress": "In progress",
+      "finished": "Finished"
+    }
+  },
+  "dashboard": {
+    "notFound": "Tournament not found",
+    "tournamentInfo": "Tournament info",
+    "firstRound": "Generate first round",
+    "finalStandings": "Final standings",
+    "format": "Format",
+    "status": "Status",
+    "settings": "Game settings",
+    "points": "Points in a match",
+    "timeInfo": "Time info",
+    "createdAt": "Created at",
+    "wasCreated": "Tournament created {{count}} days ago",
+    "tournamentRules": "{{format}} tournament rules ",
+    "rules": {
+      "Americano": [
+        "Players play in pairs with randomly selected partners",
+        "Players play against randomly selected opponents in each match",
+        "Points are earned individually by each player",
+        "The winner is the player with the highest number of points"
+      ],
+      "Mexicano": [
+        "In the first round, players play with randomly selected partners and opponents",
+        "In each subsequent round, the system divides players into groups of 4 based on points and randomly pairs them within the group",
+        "Points are earned individually by each player",
+        "The winner is the player with the highest number of points"
+      ]
     }
   }
 }

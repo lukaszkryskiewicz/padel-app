@@ -1,102 +1,84 @@
-import type { TournamentFormValues } from '@/types/tournament';
-import { Card, CardTitle, CardHeader, CardContent } from '../ui/card';
-import { getLabelForValue } from '@/lib/getLabelForValue';
-import {
-  TOURNAMENT_FORMAT_OPTIONS,
-  TEAM_FORMAT_OPTIONS,
-  RESULT_SORTING_OPTIONS,
-  POINTS_PER_MATCH_OPTIONS,
-  FINAL_MATCH_OPTIONS,
-} from '@/constants/tournaments';
+import type { TournamentApiValues } from '@/types/tournament';
+import { Calendar, Users, Target, Trophy, ReceiptText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import BasicInfoCard from './sections/BasicInfoCard';
+import GameSettingsCard from './sections/GameSettingsCard';
+import TimeInfoCard from './sections/TimeInfoCard';
+import PlayersCard from './sections/PlayersCard';
+import TournamentRulesCard from './sections/TournamentRulesCard';
+import InfoCard from './shared/InfoCard';
 
 export const TournamentDetails = ({
   tournament,
 }: {
-  tournament: TournamentFormValues;
+  tournament: TournamentApiValues;
 }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-3xl mx-auto mt-10">
-      <Card className="shadow-md bg-white/80 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl text-gray-800">
-            {tournament.title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 text-gray-700">
-          <p>
-            <span className="font-semibold">
-              {t('tournament.tournamentType')}:
-            </span>{' '}
-            {t(
-              TOURNAMENT_FORMAT_OPTIONS.find(
-                (opt) => opt.value === tournament.format
-              )?.i18nKey || ''
-            )}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.teamFormatLabel')}:
-            </span>{' '}
-            {t(
-              TEAM_FORMAT_OPTIONS.find(
-                (opt) => opt.value === tournament.teamFormat
-              )?.i18nKey || ''
-            )}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.resultSortingLabel')}:
-            </span>{' '}
-            {t(
-              RESULT_SORTING_OPTIONS.find(
-                (opt) => opt.value === tournament.resultSorting
-              )?.i18nKey || ''
-            )}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.finalMatchLabel')}:
-            </span>{' '}
-            {getLabelForValue(
-              FINAL_MATCH_OPTIONS,
-              tournament.finalMatch.toString()
-            )}
-          </p>
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.pointsPerMatchLabel')}:
-            </span>{' '}
-            {t(
-              POINTS_PER_MATCH_OPTIONS.find(
-                (opt) => opt.value == tournament.pointsPerMatch
-              )?.i18nKey || ''
-            )}
-          </p>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Basic Info */}
+        <InfoCard
+          icon={<Trophy className="w-5 h-5" />}
+          title={t('tournament.basicInfo')}
+          borderColor="border-blue-100"
+          titleColor="text-blue-700"
+        >
+          <BasicInfoCard
+            title={tournament.title}
+            format={tournament.format}
+            status={tournament.status}
+          />
+        </InfoCard>
 
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.playersTitle')}:
-            </span>{' '}
-            {tournament.players.map((p) => p.name).join(', ')}
-          </p>
+        {/* Game Settings */}
+        <InfoCard
+          icon={<Target className="w-5 h-5" />}
+          title={t('dashboard.settings')}
+          borderColor="border-green-100"
+          titleColor="text-green-700"
+          className="col-span-2 order-2 lg:order-0"
+        >
+          <GameSettingsCard
+            courts={tournament.courts}
+            pointsPerMatch={tournament.pointsPerMatch}
+            teamFormat={tournament.teamFormat}
+            finalMatch={tournament.finalMatch}
+            resultSorting={tournament.resultSorting}
+          />
+        </InfoCard>
 
-          <p>
-            <span className="font-semibold">
-              {' '}
-              {t('tournament.courtsTitle')}:
-            </span>{' '}
-            {tournament.courts.map((c) => `${c.name} (${c.number})`).join(', ')}
-          </p>
-        </CardContent>
-      </Card>
+        {/* Timeline */}
+        <InfoCard
+          icon={<Calendar className="w-5 h-5" />}
+          title={t('dashboard.timeInfo')}
+          borderColor="border-purple-100"
+          titleColor="text-purple-700"
+        >
+          <TimeInfoCard createdAt={tournament.createdAt} />
+        </InfoCard>
+      </div>
+
+      {/* Players */}
+      <InfoCard
+        icon={<Users className="w-5 h-5" />}
+        title={t('tournament.playersTitle')}
+        borderColor="border-orange-100"
+        titleColor="text-orange-700"
+      >
+        <PlayersCard players={tournament.players} />
+      </InfoCard>
+
+      {/* Tournament Rules */}
+      <InfoCard
+        icon={<ReceiptText className="w-5 h-5" />}
+        title={t('dashboard.tournamentRules', { format: tournament.format })}
+        borderColor="border-orange-100"
+        titleColor="text-orange-700"
+      >
+        <TournamentRulesCard format={tournament.format} />
+      </InfoCard>
     </div>
   );
 };
