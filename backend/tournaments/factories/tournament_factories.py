@@ -1,7 +1,7 @@
 import factory
 from backend.tournaments.models import Tournament, Court, Match, Player, MatchPlayer
 from faker import Faker
-
+from django.db import models
 
 faker = Faker()
 
@@ -16,6 +16,7 @@ class TournamentFactory(factory.django.DjangoModelFactory):
     final_match = factory.Faker('random_element', elements=Tournament.FinalMatch.values)
     points_per_match = factory.Faker('random_int', min=1, max=50)
     status = Tournament.TournamentStatus.NEW
+    rounds = 0
 
 class CourtFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -38,7 +39,9 @@ class MatchFactory(factory.django.DjangoModelFactory):
 
     tournament = factory.SubFactory(TournamentFactory)
     court = factory.SubFactory(CourtFactory, tournament=factory.SelfAttribute('..tournament'))
-    round_number = factory.Faker('random_int', min=1, max=25)
+    round_number = factory.LazyAttribute(
+        lambda o: faker.random_int(min=1, max=o.tournament.rounds + 1)
+    )
 
     team_1_score = factory.LazyAttribute(
         lambda o: faker.random_int(min=0, max=50) if o.played else None
@@ -89,3 +92,8 @@ class TournamentWithRelationsFactory(TournamentFactory):
         count = extracted or (5 if kwargs.get('full') else None)
         if count:
             MatchFactory.create_batch(count, tournament=self)
+            self.rounds = self.matches.aggregate(
+                max_round=models.Max('round_number')
+            )['max_round'] or 0
+            self.save(update_fields=['rounds'])
+

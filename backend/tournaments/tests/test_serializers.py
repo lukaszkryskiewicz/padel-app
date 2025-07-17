@@ -128,6 +128,7 @@ class TournamentSerializerTest(TestCase):
             'id': self.tournament.id,
             'title': self.tournament.title,
             'status': self.tournament.status,
+            'rounds': self.tournament.rounds,
             'format': self.tournament.format,
             'result_sorting': self.tournament.result_sorting,
             'team_format': self.tournament.team_format,

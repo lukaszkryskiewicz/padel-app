@@ -27,6 +27,7 @@ class Tournament(models.Model):
 
     title = models.CharField(max_length=30, default='Padel Tournament')
     status = models.CharField(max_length=20, choices=TournamentStatus.choices, default=TournamentStatus.NEW)
+    rounds = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     format = models.CharField(max_length=20, choices=TournamentFormat.choices)
     result_sorting = models.CharField(max_length=20, choices=ResultSorting.choices)
     team_format = models.CharField(max_length=20, choices=TeamFormat.choices)
