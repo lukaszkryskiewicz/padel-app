@@ -49,6 +49,19 @@ class CurrentRoundMatchesView(generics.ListAPIView):
         latest_round = matches.aggregate(max_round=Max('round_number'))['max_round']
         return matches.filter(round_number=latest_round) if latest_round else Match.objects.none()
 
+class SingleRoundMatchesView(generics.ListAPIView):
+    """
+    GET: Returns all matches from the current round of a specific tournament.
+    """
+    serializer_class = MatchSerializer
+
+    def get_queryset(self):
+        tournament_id = self.kwargs['tournament_id']
+        round_id = self.kwargs['round_id']
+        matches = Match.objects.filter(tournament_id=tournament_id)
+        return matches.filter(round_number=round_id)
+
+
 class MatchUpdateView(generics.UpdateAPIView):
     """
     PATCH: Updates a single match (e.g., scores or played status).
