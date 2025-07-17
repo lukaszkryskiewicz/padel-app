@@ -126,5 +126,17 @@
         "The winner is the player with the highest number of points"
       ]
     }
+  },
+  "round": {
+    "round": "Round {{round}}",
+    "courts": "Tournament played on {{count}} courts",
+    "progress": "Progress: {{completedMatches}} matches",
+    "setScore": "Select points for team ",
+    "winner": "Winner: Team {{team}}",
+    "close": "Close",
+    "finished": "Finished",
+    "inProgress": "In progress",
+    "nextRound": "Create next round",
+    "summary": "Round progress: {{completedMatches}}/{{totalMatches}} games finished ({{percentCompleted}}%)"
   }
 }

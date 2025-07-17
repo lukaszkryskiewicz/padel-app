@@ -34,8 +34,8 @@ const DashboardHeader = ({
         {tournament.title}
       </h1>
       <div className="flex items-center justify-center gap-6 text-lg text-gray-600">
-        {headerItems.map((item) => (
-          <div className="flex items-center gap-2">
+        {headerItems.map((item, idx) => (
+          <div key={idx} className="flex items-center gap-2">
             {item.icon}
             <span>{item.text}</span>
           </div>

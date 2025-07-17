@@ -75,3 +75,63 @@ export interface InfoItemProps {
   label: string;
   value: string | number | React.ReactNode;
 }
+
+interface MatchCourts {
+  id: number;
+  name: string;
+  number?: number;
+  tournament: number;
+}
+
+interface MatchPlayers {
+  id: number;
+  name: string;
+  team: 'team1' | 'team2';
+}
+
+export interface Match {
+  id: number;
+  roundNumber: number;
+  court: MatchCourts;
+  team_1Score: number | null;
+  team_2Score: number | null;
+  played: boolean;
+  players: MatchPlayers[];
+}
+
+export interface RoundTabProps {
+  roundNumber: string;
+  tournament_id: string | undefined;
+  pointsPerMatch: string;
+  courts: number;
+}
+
+export interface RoundHeaderProps {
+  roundNumber: string;
+  courts: number;
+  completedMatches: number;
+  totalMatches: number;
+  createNextRound: () => void;
+}
+
+export interface ProgressBarProps {
+  completedMatches: number;
+  totalMatches: number;
+}
+
+export interface RoundSummaryProps {
+  completedMatches: number;
+  totalMatches: number;
+}
+export interface CourtViewProps {
+  match: Match;
+  updateMatchInRound: (match: Match) => void;
+  pointsPerMatch: string;
+}
+
+export interface ScoreModalProps {
+  pointsPerMatch: string;
+  handleSelect: (score: number) => void;
+  onClose: () => void;
+  activeTeam: string;
+}

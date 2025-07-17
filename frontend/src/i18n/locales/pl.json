@@ -68,7 +68,6 @@
     "courtsPlaceholder": "Kort",
     "courtsNumber": "Kort nr",
     "courtsSingular": "Kort nr "
-    
   },
   "options": {
     "format": {
@@ -127,5 +126,17 @@
         "Zwycięzca to gracz z największą liczbą punktów"
       ]
     }
+  },
+  "round": {
+    "round": "Runda {{round}}",
+    "courts": "Turniej rozgrywany na {{count}} kortach",
+    "progress": "Postęp: {{completedMatches}} meczów",
+    "setScore": "Wybierz punkty dla drużyny ",
+    "winner": "Zwycięzca: Drużyna {{team}}",
+    "close": "Zamknij",
+    "finished": "Zakończony",
+    "inProgress": "W trakcie",
+    "nextRound": "Utwórz kolejną rundę",
+    "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)"
   }
 }

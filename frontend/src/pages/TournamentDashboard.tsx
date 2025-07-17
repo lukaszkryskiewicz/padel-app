@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import DashboardHeader from '@/components/tournament/sections/DashboardHeader';
 import { useTranslation } from 'react-i18next';
+import RoundTab from '@/components/rounds/RoundTab';
 
 const TournamentDashboard = () => {
   const { t } = useTranslation();
@@ -74,9 +75,21 @@ const TournamentDashboard = () => {
                 <TabsTrigger value="tournament_info" className="px-6 py-3">
                   {t('dashboard.tournamentInfo')}
                 </TabsTrigger>
+                <TabsTrigger value="round1" className="px-6 py-3">
+                  Runda 1
+                </TabsTrigger>
               </TabsList>
+
               <TabsContent value="tournament_info">
                 <TournamentDetails tournament={tournament} />
+              </TabsContent>
+              <TabsContent value="round1">
+                <RoundTab
+                  roundNumber={'1'}
+                  tournament_id={id}
+                  pointsPerMatch={tournament.pointsPerMatch}
+                  courts={tournament.courts.length}
+                />
               </TabsContent>
             </Tabs>
           </CardContent>
