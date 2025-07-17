@@ -26,7 +26,7 @@ export const getCurrentRoundMatchesApi = (tournament_id: string) => {
 };
 
 export const getSingleRoundMatchesApi = (
-  round_id: string,
+  round_id: number,
   tournament_id: string
 ) => {
   return axios.get(

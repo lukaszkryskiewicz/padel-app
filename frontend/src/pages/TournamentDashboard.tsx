@@ -54,11 +54,12 @@ const TournamentDashboard = () => {
     );
   }
 
-  const generate_round = async () => {
+  const generateRound = async () => {
     try {
       if (!id) return;
-      const response = await generateNewRound(id);
-      console.log(response.data);
+      await generateNewRound(id);
+      const response = await getSingleTournamentApi(id);
+      setTournament(response.data);
     } catch (error) {
       console.error('Error fetching tournament:', error);
     }
@@ -70,34 +71,42 @@ const TournamentDashboard = () => {
         <DashboardHeader tournament={tournament} />
         <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
           <CardContent className="p-6">
-            <Tabs defaultValue="tournament_info" className="w-full">
+            <Tabs defaultValue="tournamentInfo" className="w-full">
               <TabsList className="w-full h-auto p-2 bg-gray-100 rounded-lg flex flex-wrap justify-start gap-2 mb-6">
-                <TabsTrigger value="tournament_info" className="px-6 py-3">
+                <TabsTrigger value="tournamentInfo" className="px-6 py-3">
                   {t('dashboard.tournamentInfo')}
                 </TabsTrigger>
-                <TabsTrigger value="round1" className="px-6 py-3">
-                  Runda 1
-                </TabsTrigger>
+                {[...Array(tournament.rounds)].map((v, i) => (
+                  <TabsTrigger
+                    key={`round${i + 1}`}
+                    value={`round${i + 1}`}
+                    className="px-6 py-3"
+                  >
+                    {t('round.round', { round: i + 1 })}
+                  </TabsTrigger>
+                ))}
               </TabsList>
-
-              <TabsContent value="tournament_info">
+              <TabsContent value="tournamentInfo">
                 <TournamentDetails tournament={tournament} />
               </TabsContent>
-              <TabsContent value="round1">
-                <RoundTab
-                  roundNumber={'1'}
-                  tournament_id={id}
-                  pointsPerMatch={tournament.pointsPerMatch}
-                  courts={tournament.courts.length}
-                />
-              </TabsContent>
+              {[...Array(tournament.rounds)].map((v, i) => (
+                <TabsContent key={`round${i + 1}`} value={`round${i + 1}`}>
+                  <RoundTab
+                    roundNumber={i + 1}
+                    tournamentId={id}
+                    pointsPerMatch={tournament.pointsPerMatch}
+                    courts={tournament.courts.length}
+                    generateNextRound={generateRound}
+                  />
+                </TabsContent>
+              ))}
             </Tabs>
           </CardContent>
         </Card>
         {tournament.status === 'NEW' && (
           <Button
             className="mx-auto my-10 px-8 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-lg rounded-md flex items-center gap-2"
-            onClick={generate_round}
+            onClick={generateRound}
           >
             {t('dashboard.firstRound')}
           </Button>

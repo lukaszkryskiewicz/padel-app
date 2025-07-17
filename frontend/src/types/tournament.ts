@@ -28,6 +28,7 @@ export interface TournamentApiValues extends TournamentFormValues {
   id: number;
   status: string;
   createdAt: string;
+  rounds: number;
 }
 
 export interface TournamentFormProps {
@@ -100,14 +101,15 @@ export interface Match {
 }
 
 export interface RoundTabProps {
-  roundNumber: string;
-  tournament_id: string | undefined;
+  roundNumber: number;
+  tournamentId: string | undefined;
   pointsPerMatch: string;
   courts: number;
+  generateNextRound: () => void;
 }
 
 export interface RoundHeaderProps {
-  roundNumber: string;
+  roundNumber: number;
   courts: number;
   completedMatches: number;
   totalMatches: number;

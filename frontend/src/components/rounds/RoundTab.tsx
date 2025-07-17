@@ -12,9 +12,10 @@ import RoundSummary from './sections/RoundSummary';
 
 const RoundTab = ({
   roundNumber,
-  tournament_id,
+  tournamentId,
   pointsPerMatch,
   courts,
+  generateNextRound,
 }: RoundTabProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,7 +31,7 @@ const RoundTab = ({
 
   useEffect(() => {
     const fetchRound = async () => {
-      if (!roundNumber || !tournament_id) {
+      if (!roundNumber || !tournamentId) {
         console.error('No tournament ID or round number in URL');
         setLoading(false);
         return;
@@ -39,7 +40,7 @@ const RoundTab = ({
       try {
         const response = await getSingleRoundMatchesApi(
           roundNumber,
-          tournament_id
+          tournamentId
         );
         setRound(response.data);
       } catch (error) {
@@ -50,7 +51,7 @@ const RoundTab = ({
     };
 
     fetchRound();
-  }, [roundNumber, tournament_id]);
+  }, [roundNumber, tournamentId]);
 
   useEffect(() => {
     const completed = round.filter((match) => match.played === true).length;
@@ -72,7 +73,7 @@ const RoundTab = ({
         courts={courts}
         completedMatches={completedMatches}
         totalMatches={totalMatches}
-        createNextRound={() => console.log('soon')}
+        createNextRound={generateNextRound}
       />
 
       <ProgressBar
