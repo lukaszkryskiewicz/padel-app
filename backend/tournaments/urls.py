@@ -26,6 +26,6 @@ urlpatterns = [
     path('<int:tournament_id>/current-round/', CurrentRoundMatchesView.as_view(), name="current-round-matches"),
     path('<int:tournament_id>/<int:round_id>/', SingleRoundMatchesView.as_view(), name="single-round-matches"),
     path('<int:tournament_id>/update-single/<int:pk>/', MatchUpdateView.as_view(), name='single-match-update'),
-    path('<int:tournament_id>/update-round/', RoundResultsUpdateView.as_view(), name='round-results-update'),
+    path('<int:tournament_id>/update-round/<int:round_id>/', RoundResultsUpdateView.as_view(), name='round-results-update'),
     path('<int:tournament_id>/generate-round/', GenerateRoundView.as_view(), name='generate-round'),
 ]

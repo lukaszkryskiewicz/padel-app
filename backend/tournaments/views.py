@@ -76,10 +76,29 @@ class RoundResultsUpdateView(generics.GenericAPIView):
     """
     serializer_class = RoundResultsSerializer
 
-    def patch(self, request, tournament_id, *args, **kwargs):
+    def patch(self, request, tournament_id,round_id, *args, **kwargs):
         tournament = get_object_or_404(Tournament, pk=tournament_id)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        # checks if all matches belongs to the updated round
+        match_ids = [result['match_id'] for result in serializer.validated_data['results']]
+        invalid_matches = Match.objects.filter(
+            id__in=match_ids
+        ).exclude(
+            tournament=tournament,
+            round_number=round_id
+        )
+
+        if invalid_matches.exists():
+            invalid_ids = list(invalid_matches.values_list('id', flat=True))
+            return Response(
+                {
+                    "error": "One or more matches do not belong to the specified round.",
+                    "invalid_match_ids": invalid_ids,
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         for result in serializer.validated_data['results']:
             match = get_object_or_404(Match, pk=result['match_id'], tournament=tournament)
