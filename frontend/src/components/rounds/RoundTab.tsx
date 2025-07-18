@@ -15,7 +15,7 @@ const RoundTab = ({
   tournamentId,
   pointsPerMatch,
   courts,
-  generateNextRound,
+  saveScoresAndGenerateRound,
 }: RoundTabProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(true);
@@ -58,6 +58,10 @@ const RoundTab = ({
     setCompletedMatches(completed);
   }, [round]);
 
+  const saveRound = () => {
+    saveScoresAndGenerateRound(roundNumber, round);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -73,7 +77,7 @@ const RoundTab = ({
         courts={courts}
         completedMatches={completedMatches}
         totalMatches={totalMatches}
-        createNextRound={generateNextRound}
+        saveRound={saveRound}
       />
 
       <ProgressBar

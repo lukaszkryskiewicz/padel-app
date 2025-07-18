@@ -105,7 +105,7 @@ export interface RoundTabProps {
   tournamentId: string | undefined;
   pointsPerMatch: string;
   courts: number;
-  generateNextRound: () => void;
+  saveScoresAndGenerateRound: (roundId: number, roundData: Match[]) => void;
 }
 
 export interface RoundHeaderProps {
@@ -113,7 +113,7 @@ export interface RoundHeaderProps {
   courts: number;
   completedMatches: number;
   totalMatches: number;
-  createNextRound: () => void;
+  saveRound: () => void;
 }
 
 export interface ProgressBarProps {
@@ -136,4 +136,11 @@ export interface ScoreModalProps {
   handleSelect: (score: number) => void;
   onClose: () => void;
   activeTeam: string;
+}
+
+export interface MatchUpdatePayload {
+  match_id: number;
+  team_1Score: number | null;
+  team_2Score: number | null;
+  played: boolean;
 }

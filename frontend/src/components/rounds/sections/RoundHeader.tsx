@@ -8,7 +8,7 @@ const RoundHeader = ({
   courts,
   completedMatches,
   totalMatches,
-  createNextRound,
+  saveRound,
 }: RoundHeaderProps) => {
   const { t } = useTranslation();
 
@@ -38,7 +38,7 @@ const RoundHeader = ({
           )}
         </Badge>
         <button
-          onClick={createNextRound}
+          onClick={saveRound}
           disabled={completedMatches !== totalMatches}
           className={`px-4 py-2 rounded-lg font-medium transition-all ${
             completedMatches === totalMatches

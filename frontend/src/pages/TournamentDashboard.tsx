@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
-import { getSingleTournamentApi, generateNewRound } from '@/api/tournaments';
+import {
+  getSingleTournamentApi,
+  generateNewRound,
+  updateRound,
+} from '@/api/tournaments';
 import { useParams } from 'react-router';
 import { Loader } from 'lucide-react';
-import type { TournamentApiValues } from '@/types/tournament';
+import type { TournamentApiValues, Match } from '@/types/tournament';
 import { TournamentDetails } from '@/components/tournament/TournamentDetails';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +14,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import DashboardHeader from '@/components/tournament/sections/DashboardHeader';
 import { useTranslation } from 'react-i18next';
 import RoundTab from '@/components/rounds/RoundTab';
+import { mapMatchesToPayload } from '@/lib/tournament-utils';
 
 const TournamentDashboard = () => {
   const { t } = useTranslation();
@@ -54,14 +59,48 @@ const TournamentDashboard = () => {
     );
   }
 
-  const generateRound = async () => {
+  const saveRoundScores = async (roundId: number, roundData: Match[]) => {
+    if (!id) {
+      console.warn('No tournament ID provided');
+      return;
+    }
     try {
-      if (!id) return;
+      if (!roundData.some((round) => round.roundNumber === roundId)) {
+        console.log(roundData, roundId);
+        console.log('Błąd z rundą ');
+        throw new Error(`Some matches do not match round ${roundId}`);
+      }
+
+      const payload = mapMatchesToPayload(roundData);
+      const response = await updateRound(id, roundId, payload);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Failed to save round scores:', error);
+    }
+  };
+
+  const saveScoresAndGenerateRound = async (
+    roundId: number,
+    roundData: Match[]
+  ) => {
+    try {
+      await saveRoundScores(roundId, roundData);
+      await generateRound();
+    } catch (error) {
+      console.error('Failed to save scores and generate next round:', error);
+    }
+  };
+  const generateRound = async () => {
+    if (!id) {
+      console.warn('No tournament ID provided');
+      return;
+    }
+    try {
       await generateNewRound(id);
       const response = await getSingleTournamentApi(id);
       setTournament(response.data);
     } catch (error) {
-      console.error('Error fetching tournament:', error);
+      console.error('Failed to generete round:', error);
     }
   };
 
@@ -89,14 +128,14 @@ const TournamentDashboard = () => {
               <TabsContent value="tournamentInfo">
                 <TournamentDetails tournament={tournament} />
               </TabsContent>
-              {[...Array(tournament.rounds)].map((v, i) => (
+              {[...Array(tournament.rounds)].map((_, i) => (
                 <TabsContent key={`round${i + 1}`} value={`round${i + 1}`}>
                   <RoundTab
                     roundNumber={i + 1}
                     tournamentId={id}
                     pointsPerMatch={tournament.pointsPerMatch}
                     courts={tournament.courts.length}
-                    generateNextRound={generateRound}
+                    saveScoresAndGenerateRound={saveScoresAndGenerateRound}
                   />
                 </TabsContent>
               ))}
