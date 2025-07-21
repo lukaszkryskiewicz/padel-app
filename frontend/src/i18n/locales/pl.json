@@ -142,6 +142,8 @@
   "standings": {
     "title": "Klasyfikacja", 
     "empty": "Brak zapisanych wyników rund",
+    "detailedView": "Widok szczegółowy",
+    "generalView": "Widok ogólny",
     "participants": "Uczestnicy",
     "participantsInTournament": "Uczestników w turnieju",
     "averagePoints": "Średnia punktów",
