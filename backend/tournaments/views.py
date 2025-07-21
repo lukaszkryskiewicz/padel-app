@@ -3,9 +3,10 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from django.db.models import Max
 
+from .logic.ranking import get_tournament_ranking, create_ranking_snapshots
 from .models import Tournament, Match
 from .serializers import TournamentSerializer, MatchUpdateSerializer, RoundResultsSerializer, \
-    TournamentCreateSerializer, MatchSerializer, GenerateRoundSerializer
+    TournamentCreateSerializer, MatchSerializer, GenerateRoundSerializer, PlayerRankingSerializer
 
 
 class TournamentListCreateView(generics.ListCreateAPIView):
@@ -107,6 +108,8 @@ class RoundResultsUpdateView(generics.GenericAPIView):
             match.played = result['played']
             match.save()
 
+        create_ranking_snapshots(tournament.id, round_id)
+
         return Response({"status": "round results updated"}, status=status.HTTP_200_OK)
 
 class GenerateRoundView(generics.CreateAPIView):
@@ -126,3 +129,14 @@ class GenerateRoundView(generics.CreateAPIView):
             {"detail": "Runda została wygenerowana.", "tournament_id": tournament.id},
             status=status.HTTP_201_CREATED
         )
+
+class TournamentRankingView(generics.ListAPIView):
+    """
+    GET: Returns aggregated ranking for all players in a tournament.
+    """
+    serializer_class = PlayerRankingSerializer
+
+    def get_queryset(self):
+        tournament_id = self.kwargs["tournament_id"]
+        tournament = get_object_or_404(Tournament, pk=tournament_id)
+        return get_tournament_ranking(tournament.id)

@@ -17,7 +17,8 @@ Including another URLconf
 from django.urls import path
 
 from backend.tournaments.views import TournamentListCreateView, TournamentRetriveView, MatchListView, \
-    CurrentRoundMatchesView, MatchUpdateView, RoundResultsUpdateView, GenerateRoundView, SingleRoundMatchesView
+    CurrentRoundMatchesView, MatchUpdateView, RoundResultsUpdateView, GenerateRoundView, SingleRoundMatchesView, \
+    TournamentRankingView
 
 urlpatterns = [
     path('', TournamentListCreateView.as_view(), name="tournament-list-create"),
@@ -28,4 +29,5 @@ urlpatterns = [
     path('<int:tournament_id>/update-single/<int:pk>/', MatchUpdateView.as_view(), name='single-match-update'),
     path('<int:tournament_id>/update-round/<int:round_id>/', RoundResultsUpdateView.as_view(), name='round-results-update'),
     path('<int:tournament_id>/generate-round/', GenerateRoundView.as_view(), name='generate-round'),
+    path('<int:tournament_id>/ranking/', TournamentRankingView.as_view(), name='tournament-ranking')
 ]

@@ -127,3 +127,27 @@ class MatchPlayer(models.Model):
 
     def __str__(self):
         return f"{self.player.name} in {self.match} ({self.team})"
+
+# creates Ranking snapshots for further development (charts, history etc)
+class RankingSnapshot(models.Model):
+    tournament = models.ForeignKey(
+        Tournament,
+        on_delete=models.CASCADE,
+        related_name="ranking_snapshots"
+    )
+    player = models.ForeignKey(
+        Player,
+        on_delete=models.CASCADE,
+        related_name="ranking_snapshots"
+    )
+    round_number = models.PositiveIntegerField()
+    points = models.PositiveIntegerField()
+    is_winner = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('tournament', 'player', 'round_number')
+        ordering = ['round_number']
+
+    def __str__(self):
+        winner_str = 'WIN' if self.is_winner else 'LOSE'
+        return f"{self.player.name} - Round {self.round_number}: {self.points} pts {winner_str}"

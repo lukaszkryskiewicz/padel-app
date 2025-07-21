@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from backend.tournaments.logic.americano_single import generate_americano_round
-from backend.tournaments.models import Player, Tournament, Match, MatchPlayer, Court
+from backend.tournaments.models import Player, Tournament, Match, MatchPlayer, Court, RankingSnapshot
 from django.db import transaction, IntegrityError
 
 
@@ -196,3 +196,32 @@ class GenerateRoundSerializer(serializers.Serializer):
         tournament = self.context['tournament']
         generate_americano_round(tournament)
         return tournament  # return tournament with new round
+
+class RankingSnapshotSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(source='player.name')
+
+    class Meta:
+        model = RankingSnapshot
+        fields = ['name', 'round_number', 'points', 'is_winner']
+
+class PlayerRoundResultSerializer(serializers.Serializer):
+    round_number = serializers.IntegerField()
+    points = serializers.IntegerField()
+    is_winner = serializers.BooleanField()
+
+class WinLossRecordSerializer(serializers.Serializer):
+    win = serializers.IntegerField()
+    draw = serializers.IntegerField()
+    loss = serializers.IntegerField()
+
+class PlayerRankingSerializer(serializers.Serializer):
+
+    id = serializers.CharField()
+    name = serializers.CharField()
+    rounds = PlayerRoundResultSerializer(many=True)
+    total_points = serializers.IntegerField()
+    total_matches = serializers.IntegerField()
+    win_loss_record = WinLossRecordSerializer()
+    win_rate = serializers.IntegerField()
+
