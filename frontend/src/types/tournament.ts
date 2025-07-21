@@ -1,7 +1,6 @@
 export interface Player {
   name: string;
 }
-
 export interface Court {
   name: string;
   number?: number;
@@ -143,4 +142,35 @@ export interface MatchUpdatePayload {
   team_1Score: number | null;
   team_2Score: number | null;
   played: boolean;
+}
+
+interface RoundsStanding {
+  roundNumber: number;
+  points: number;
+  isWinner: boolean;
+}
+
+interface WinLossRecord {
+  win: number;
+  draw: number;
+  loss: number;
+}
+export interface Standings {
+  id: number;
+  name: string;
+  rounds: RoundsStanding[];
+  totalPoints: number;
+  totalMatches: number;
+  winLossRecord: WinLossRecord;
+  winRate: number;
+}
+
+export interface StandingsTabProps {
+  tournamentId: string | undefined;
+  roundNumber: number;
+}
+
+export interface StandingsTableCellProps {
+  className: string;
+  value: string | number;
 }

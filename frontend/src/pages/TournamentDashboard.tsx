@@ -15,6 +15,7 @@ import DashboardHeader from '@/components/tournament/sections/DashboardHeader';
 import { useTranslation } from 'react-i18next';
 import RoundTab from '@/components/rounds/RoundTab';
 import { mapMatchesToPayload } from '@/lib/tournament-utils';
+import StandingsTab from '@/components/standings/StandingsTab';
 
 const TournamentDashboard = () => {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ const TournamentDashboard = () => {
   const [tournament, setTournament] = useState<TournamentApiValues | null>(
     null
   );
+  const [activeTab, setActiveTab] = useState<string>('tournamentInfo');
 
   useEffect(() => {
     const fetchTournament = async () => {
@@ -65,7 +67,7 @@ const TournamentDashboard = () => {
       return;
     }
     try {
-      if (!roundData.some((round) => round.roundNumber === roundId)) {
+      if (roundData.some((round) => round.roundNumber != roundId)) {
         console.log(roundData, roundId);
         console.log('Błąd z rundą ');
         throw new Error(`Some matches do not match round ${roundId}`);
@@ -99,6 +101,7 @@ const TournamentDashboard = () => {
       await generateNewRound(id);
       const response = await getSingleTournamentApi(id);
       setTournament(response.data);
+      setActiveTab(`round${response.data.rounds}`);
     } catch (error) {
       console.error('Failed to generete round:', error);
     }
@@ -110,12 +113,16 @@ const TournamentDashboard = () => {
         <DashboardHeader tournament={tournament} />
         <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
           <CardContent className="p-6">
-            <Tabs defaultValue="tournamentInfo" className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="w-full h-auto p-2 bg-gray-100 rounded-lg flex flex-wrap justify-start gap-2 mb-6">
                 <TabsTrigger value="tournamentInfo" className="px-6 py-3">
                   {t('dashboard.tournamentInfo')}
                 </TabsTrigger>
-                {[...Array(tournament.rounds)].map((v, i) => (
+                {[...Array(tournament.rounds)].map((_, i) => (
                   <TabsTrigger
                     key={`round${i + 1}`}
                     value={`round${i + 1}`}
@@ -124,6 +131,11 @@ const TournamentDashboard = () => {
                     {t('round.round', { round: i + 1 })}
                   </TabsTrigger>
                 ))}
+                {tournament.rounds > 0 && (
+                  <TabsTrigger value="playersRanking" className="px-6 py-3">
+                    {t('standings.title')}
+                  </TabsTrigger>
+                )}
               </TabsList>
               <TabsContent value="tournamentInfo">
                 <TournamentDetails tournament={tournament} />
@@ -139,6 +151,14 @@ const TournamentDashboard = () => {
                   />
                 </TabsContent>
               ))}
+              {tournament.rounds > 0 && (
+                <TabsContent value="playersRanking">
+                  <StandingsTab
+                    tournamentId={id}
+                    roundNumber={tournament.rounds}
+                  />
+                </TabsContent>
+              )}
             </Tabs>
           </CardContent>
         </Card>

@@ -138,5 +138,25 @@
     "inProgress": "W trakcie",
     "nextRound": "Utwórz kolejną rundę",
     "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)"
+  },
+  "standings": {
+    "title": "Klasyfikacja", 
+    "empty": "Brak zapisanych wyników rund",
+    "participants": "Uczestnicy",
+    "participantsInTournament": "Uczestników w turnieju",
+    "averagePoints": "Średnia punktów",
+    "pointsPerPlayer": "Punktów na uczestnika",
+    "winner": "Zwycięzca",
+    "points": "Punkty",
+    "roundsNumber": "Rozegranych rund",
+    "rounds": "Rund",
+    "finalStandings":"Klasyfikacja końcowa",
+    "position": "Pozycja",
+    "participant": "Uczestnik",
+    "matches": "Mecze",
+    "wins": "Wygrane",
+    "draws": "Remisy",
+    "loss": "Przegrane",
+    "winsRatio": "% Wygranych"
   }
 }

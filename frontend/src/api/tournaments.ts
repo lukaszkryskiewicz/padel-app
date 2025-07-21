@@ -47,3 +47,9 @@ export const updateRound = (
     { results: data }
   );
 };
+
+export const getPlayersRanking = (tournament_id: string) => {
+  return axios.get(
+    `http://127.0.0.1:8000/api/tournaments/${tournament_id}/ranking/`
+  );
+};
