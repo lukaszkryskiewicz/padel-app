@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from backend.tournaments.logic.americano_single import generate_americano_round
+from backend.tournaments.logic.final_round import generate_final_round
 from backend.tournaments.models import Player, Tournament, Match, MatchPlayer, Court, RankingSnapshot
 from django.db import transaction, IntegrityError
 
@@ -180,6 +181,7 @@ class RoundResultsSerializer(serializers.Serializer):
         return data
 
 class GenerateRoundSerializer(serializers.Serializer):
+    is_final = serializers.BooleanField(default=False)
 
     def validate_tournament_id(self, data):
         tournament = self.context.get('tournament')
@@ -194,7 +196,8 @@ class GenerateRoundSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         tournament = self.context['tournament']
-        generate_americano_round(tournament)
+        is_final = validated_data.get('is_final', False)
+        generate_americano_round(tournament) if not is_final else generate_final_round(tournament)
         return tournament  # return tournament with new round
 
 class RankingSnapshotSerializer(serializers.ModelSerializer):

@@ -2,6 +2,19 @@ from collections import defaultdict
 
 from backend.tournaments.models import RankingSnapshot, Match, MatchPlayer
 
+def get_simplified_ranking(tournament_id):
+    """
+        Returns players ranking in tournament for final round_generation:
+        [
+            {
+                "id": xxx,
+            },
+            ...
+        ]
+        """
+
+    ranking = get_tournament_ranking(tournament_id)
+    return [ {"id": player["id"]} for player in ranking ]
 
 def get_tournament_ranking(tournament_id):
     """
@@ -60,9 +73,9 @@ def get_tournament_ranking(tournament_id):
         else:
             player['win_rate'] = 0.0
 
-
+    ranking_list = sorted(ranking.values(), key=lambda x: (x['total_points'], x['win_rate']), reverse = True)
     # Convert to list sorted by total_points desc
-    return sorted(ranking.values(), key=lambda x: (x['total_points'], x['win_rate']), reverse = True)
+    return  ranking_list
 
 def create_ranking_snapshots(tournament_id, round_number):
     """
