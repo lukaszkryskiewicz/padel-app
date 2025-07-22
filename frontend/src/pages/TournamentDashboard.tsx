@@ -68,8 +68,6 @@ const TournamentDashboard = () => {
     }
     try {
       if (roundData.some((round) => round.roundNumber != roundId)) {
-        console.log(roundData, roundId);
-        console.log('Błąd z rundą ');
         throw new Error(`Some matches do not match round ${roundId}`);
       }
 
@@ -83,22 +81,23 @@ const TournamentDashboard = () => {
 
   const saveScoresAndGenerateRound = async (
     roundId: number,
-    roundData: Match[]
+    roundData: Match[],
+    finalRound: boolean
   ) => {
     try {
       await saveRoundScores(roundId, roundData);
-      await generateRound();
+      await generateRound(finalRound);
     } catch (error) {
       console.error('Failed to save scores and generate next round:', error);
     }
   };
-  const generateRound = async () => {
+  const generateRound = async (finalRound = false) => {
     if (!id) {
       console.warn('No tournament ID provided');
       return;
     }
     try {
-      await generateNewRound(id);
+      await generateNewRound(id, finalRound);
       const response = await getSingleTournamentApi(id);
       setTournament(response.data);
       setActiveTab(`round${response.data.rounds}`);
@@ -145,6 +144,7 @@ const TournamentDashboard = () => {
                   <RoundTab
                     roundNumber={i + 1}
                     tournamentId={id}
+                    latestRound={tournament.rounds}
                     pointsPerMatch={tournament.pointsPerMatch}
                     courts={tournament.courts.length}
                     saveScoresAndGenerateRound={saveScoresAndGenerateRound}
@@ -165,7 +165,7 @@ const TournamentDashboard = () => {
         {tournament.status === 'NEW' && (
           <Button
             className="mx-auto my-10 px-8 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-lg rounded-md flex items-center gap-2"
-            onClick={generateRound}
+            onClick={() => generateRound(false)}
           >
             {t('dashboard.firstRound')}
           </Button>

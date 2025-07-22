@@ -6,6 +6,7 @@ import { Clock, CheckCircle } from 'lucide-react';
 const RoundHeader = ({
   roundNumber,
   courts,
+  latestRound,
   completedMatches,
   totalMatches,
   saveRound,
@@ -37,17 +38,33 @@ const RoundHeader = ({
             </>
           )}
         </Badge>
-        <button
-          onClick={saveRound}
-          disabled={completedMatches !== totalMatches}
-          className={`px-4 py-2 rounded-lg font-medium transition-all ${
-            completedMatches === totalMatches
-              ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
-        >
-          {t('round.nextRound')}
-        </button>
+        {latestRound === roundNumber && (
+          <div className="flex item-center gap-4">
+            <button
+              onClick={() => saveRound(false)}
+              disabled={completedMatches !== totalMatches}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                completedMatches === totalMatches
+                  ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {t('round.nextRound')}
+            </button>
+
+            <button
+              onClick={() => saveRound(true)}
+              disabled={completedMatches !== totalMatches}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                completedMatches === totalMatches
+                  ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {t('round.finalRound')}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import RoundSummary from './sections/RoundSummary';
 const RoundTab = ({
   roundNumber,
   tournamentId,
+  latestRound,
   pointsPerMatch,
   courts,
   saveScoresAndGenerateRound,
@@ -58,8 +59,8 @@ const RoundTab = ({
     setCompletedMatches(completed);
   }, [round]);
 
-  const saveRound = () => {
-    saveScoresAndGenerateRound(roundNumber, round);
+  const saveRound = (finalRound = false) => {
+    saveScoresAndGenerateRound(roundNumber, round, finalRound);
   };
 
   if (loading) {
@@ -75,6 +76,7 @@ const RoundTab = ({
       <RoundHeader
         roundNumber={roundNumber}
         courts={courts}
+        latestRound={latestRound}
         completedMatches={completedMatches}
         totalMatches={totalMatches}
         saveRound={saveRound}

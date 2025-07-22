@@ -102,17 +102,23 @@ export interface Match {
 export interface RoundTabProps {
   roundNumber: number;
   tournamentId: string | undefined;
+  latestRound: number;
   pointsPerMatch: string;
   courts: number;
-  saveScoresAndGenerateRound: (roundId: number, roundData: Match[]) => void;
+  saveScoresAndGenerateRound: (
+    roundId: number,
+    roundData: Match[],
+    finalRound: boolean
+  ) => void;
 }
 
 export interface RoundHeaderProps {
   roundNumber: number;
   courts: number;
+  latestRound: number;
   completedMatches: number;
   totalMatches: number;
-  saveRound: () => void;
+  saveRound: (finalRound: boolean) => void;
 }
 
 export interface ProgressBarProps {

@@ -137,7 +137,8 @@
     "close": "Zamknij",
     "finished": "Zakończony",
     "inProgress": "W trakcie",
-    "nextRound": "Utwórz kolejną rundę",
+    "nextRound": "Kolejna runda",
+    "finalRound": "Runda finałowa",
     "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)"
   },
   "standings": {

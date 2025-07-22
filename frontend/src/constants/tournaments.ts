@@ -46,8 +46,8 @@ export const TEAM_FORMAT_OPTIONS = [
 ];
 
 export const FINAL_MATCH_OPTIONS = [
-  { value: '1', label: '1 & 2 vs 3 & 4', id: '1-2-vs-3-4' },
-  { value: '2', label: '1 & 3 vs 2 & 4', id: '1-3-vs-2-4' },
+  { value: '2', label: '1 & 2 vs 3 & 4', id: '1-2-vs-3-4' },
+  { value: '1', label: '1 & 3 vs 2 & 4', id: '1-3-vs-2-4' },
   { value: '3', label: '1 & 4 vs 2 & 3', id: '1-4-vs-2-3' },
 ];
 export const POINTS_PER_MATCH_OPTIONS = [
