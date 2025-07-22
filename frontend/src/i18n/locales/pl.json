@@ -133,6 +133,7 @@
     "progress": "Postęp: {{completedMatches}} meczów",
     "setScore": "Wybierz punkty dla drużyny ",
     "winner": "Zwycięzca: Drużyna {{team}}",
+    "draw": "Remis",
     "close": "Zamknij",
     "finished": "Zakończony",
     "inProgress": "W trakcie",

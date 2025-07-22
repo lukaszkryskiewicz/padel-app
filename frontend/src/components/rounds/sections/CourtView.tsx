@@ -3,14 +3,13 @@ import { Users } from 'lucide-react';
 import { useState } from 'react';
 import ScoreModal from '../shared/ScoreModal';
 import { createPortal } from 'react-dom';
-import { useTranslation } from 'react-i18next';
+import MatchResultBadge from '../shared/MatchResultsBadge';
 
 const CourtView = ({
   match,
   updateMatchInRound,
   pointsPerMatch,
 }: CourtViewProps) => {
-  const { t } = useTranslation();
   const [modal, setModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<'1' | '2' | null>(null);
 
@@ -103,18 +102,20 @@ const CourtView = ({
         </div>
 
         {/* Winner Display */}
-        {match.played &&
-          match.team_1Score &&
-          match.team_2Score &&
-          match.team_1Score !== match.team_2Score && (
-            <div className="text-center p-3 bg-green-100 rounded-lg">
-              <span className="text-green-800 font-semibold">
-                {t('round.winner', {
-                  team: match.team_1Score > match.team_2Score ? '1' : '2',
-                })}
-              </span>
-            </div>
-          )}
+        {!!(
+          match.played &&
+          match.team_1Score != null &&
+          match.team_2Score != null
+        ) && (
+          <div>
+            {
+              <MatchResultBadge
+                isDraw={match.team_1Score === match.team_2Score}
+                winningTeam={match.team_1Score > match.team_2Score ? 1 : 2}
+              />
+            }
+          </div>
+        )}
       </div>
     </>
   );

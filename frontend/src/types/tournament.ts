@@ -174,3 +174,8 @@ export interface StandingsTableCellProps {
   className: string;
   value: string | number;
 }
+
+export interface MatchResultsBadgeProps {
+  isDraw: boolean;
+  winningTeam?: number;
+}
