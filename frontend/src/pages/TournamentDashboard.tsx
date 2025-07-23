@@ -3,6 +3,7 @@ import {
   getSingleTournamentApi,
   generateNewRound,
   updateRound,
+  finishTournament,
 } from '@/api/tournaments';
 import { useParams } from 'react-router';
 import { Loader } from 'lucide-react';
@@ -72,8 +73,7 @@ const TournamentDashboard = () => {
       }
 
       const payload = mapMatchesToPayload(roundData);
-      const response = await updateRound(id, roundId, payload);
-      console.log(response.data);
+      await updateRound(id, roundId, payload);
     } catch (error) {
       console.error('Failed to save round scores:', error);
     }
@@ -85,10 +85,21 @@ const TournamentDashboard = () => {
     finalRound: boolean
   ) => {
     try {
+      setLoading(true);
       await saveRoundScores(roundId, roundData);
-      await generateRound(finalRound);
+      if (tournament.finalRound === tournament.rounds) {
+        await endTournament();
+        return;
+      } else {
+        await generateRound(finalRound);
+      }
     } catch (error) {
-      console.error('Failed to save scores and generate next round:', error);
+      console.error(
+        'Failed to save scores, generate next round or finish tournament:',
+        error
+      );
+    } finally {
+      setLoading(false);
     }
   };
   const generateRound = async (finalRound = false) => {
@@ -103,6 +114,19 @@ const TournamentDashboard = () => {
       setActiveTab(`round${response.data.rounds}`);
     } catch (error) {
       console.error('Failed to generete round:', error);
+    }
+  };
+
+  const endTournament = async () => {
+    if (!id) {
+      console.warn('No tournament ID provided');
+      return;
+    }
+    try {
+      await finishTournament(id);
+      setActiveTab('playersRanking');
+    } catch (error) {
+      console.error('Failed to end Tournament', error);
     }
   };
 
@@ -148,6 +172,8 @@ const TournamentDashboard = () => {
                     pointsPerMatch={tournament.pointsPerMatch}
                     courts={tournament.courts.length}
                     saveScoresAndGenerateRound={saveScoresAndGenerateRound}
+                    finalRound={tournament.finalRound}
+                    tournamentStatus={tournament.status}
                   />
                 </TabsContent>
               ))}

@@ -28,6 +28,7 @@ export interface TournamentApiValues extends TournamentFormValues {
   status: string;
   createdAt: string;
   rounds: number;
+  finalRound: number;
 }
 
 export interface TournamentFormProps {
@@ -110,6 +111,8 @@ export interface RoundTabProps {
     roundData: Match[],
     finalRound: boolean
   ) => void;
+  finalRound: number;
+  tournamentStatus: string;
 }
 
 export interface RoundHeaderProps {
@@ -119,6 +122,8 @@ export interface RoundHeaderProps {
   completedMatches: number;
   totalMatches: number;
   saveRound: (finalRound: boolean) => void;
+  finalRound: number;
+  tournamentStatus: string;
 }
 
 export interface ProgressBarProps {

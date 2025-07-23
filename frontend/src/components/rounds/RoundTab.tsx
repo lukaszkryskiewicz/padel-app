@@ -17,6 +17,8 @@ const RoundTab = ({
   pointsPerMatch,
   courts,
   saveScoresAndGenerateRound,
+  finalRound,
+  tournamentStatus,
 }: RoundTabProps) => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,6 +82,8 @@ const RoundTab = ({
         completedMatches={completedMatches}
         totalMatches={totalMatches}
         saveRound={saveRound}
+        finalRound={finalRound}
+        tournamentStatus={tournamentStatus}
       />
 
       <ProgressBar

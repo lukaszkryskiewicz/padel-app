@@ -57,3 +57,9 @@ export const getPlayersRanking = (tournament_id: string) => {
     `http://127.0.0.1:8000/api/tournaments/${tournament_id}/ranking/`
   );
 };
+
+export const finishTournament = (tournament_id: string) => {
+  return axios.patch(
+    `http://127.0.0.1:8000/api/tournaments/${tournament_id}/finish/`
+  );
+};

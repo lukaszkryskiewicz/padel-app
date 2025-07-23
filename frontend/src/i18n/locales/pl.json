@@ -139,7 +139,8 @@
     "inProgress": "W trakcie",
     "nextRound": "Kolejna runda",
     "finalRound": "Runda finałowa",
-    "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)"
+    "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)",
+    "endFinalRound": "Zakończ turniej"
   },
   "standings": {
     "title": "Klasyfikacja", 

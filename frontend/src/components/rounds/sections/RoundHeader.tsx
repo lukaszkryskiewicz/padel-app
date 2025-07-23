@@ -2,6 +2,7 @@ import type { RoundHeaderProps } from '@/types/tournament';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Clock, CheckCircle } from 'lucide-react';
+import { STATUS_TOURNAMENT_OPTIONS } from '@/constants/tournaments';
 
 const RoundHeader = ({
   roundNumber,
@@ -10,6 +11,8 @@ const RoundHeader = ({
   completedMatches,
   totalMatches,
   saveRound,
+  finalRound,
+  tournamentStatus,
 }: RoundHeaderProps) => {
   const { t } = useTranslation();
 
@@ -38,7 +41,7 @@ const RoundHeader = ({
             </>
           )}
         </Badge>
-        {latestRound === roundNumber && (
+        {latestRound === roundNumber && finalRound != roundNumber && (
           <div className="flex item-center gap-4">
             <button
               onClick={() => saveRound(false)}
@@ -51,7 +54,6 @@ const RoundHeader = ({
             >
               {t('round.nextRound')}
             </button>
-
             <button
               onClick={() => saveRound(true)}
               disabled={completedMatches !== totalMatches}
@@ -65,6 +67,20 @@ const RoundHeader = ({
             </button>
           </div>
         )}
+        {finalRound === roundNumber &&
+          tournamentStatus != STATUS_TOURNAMENT_OPTIONS[2].value && (
+            <button
+              onClick={() => saveRound(false)}
+              disabled={completedMatches !== totalMatches}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                completedMatches === totalMatches
+                  ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {t('round.endFinalRound')}
+            </button>
+          )}
       </div>
     </div>
   );
