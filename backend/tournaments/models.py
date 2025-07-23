@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -28,14 +29,30 @@ class Tournament(models.Model):
     title = models.CharField(max_length=30, default='Padel Tournament')
     status = models.CharField(max_length=20, choices=TournamentStatus.choices, default=TournamentStatus.NEW)
     rounds = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    final_round = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)],
+        null=True,
+        blank=True,
+    )
     format = models.CharField(max_length=20, choices=TournamentFormat.choices)
     result_sorting = models.CharField(max_length=20, choices=ResultSorting.choices)
     team_format = models.CharField(max_length=20, choices=TeamFormat.choices)
-    final_match = models.CharField(max_length=20, choices=FinalMatch.choices)
+    final_match = models.IntegerField(choices=FinalMatch.choices)
     points_per_match = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(50)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # checks if final_round is not greater than rounds number
+    def clean(self):
+        if self.final_round and self.final_round > self.rounds:
+            raise ValidationError({
+                "final_round": _("Final round cannot be greater than total rounds.")
+            })
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # triggers clean() before saving
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.title} ({self.created_at})'

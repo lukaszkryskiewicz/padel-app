@@ -140,3 +140,17 @@ class TournamentRankingView(generics.ListAPIView):
         tournament_id = self.kwargs["tournament_id"]
         tournament = get_object_or_404(Tournament, pk=tournament_id)
         return get_tournament_ranking(tournament.id)
+
+class FinishTournamentView(generics.UpdateAPIView):
+    """
+    PATCH: Changes the tournament status  finished.
+    """
+    queryset = Tournament.objects.all()
+    serializer_class = TournamentSerializer
+
+    def patch(self, request, *args, **kwargs):
+        tournament_id = self.kwargs.get('tournament_id')
+        tournament = get_object_or_404(Tournament, pk=tournament_id)
+        tournament.status = Tournament.TournamentStatus.FINISHED
+        tournament.save(update_fields=['status'])
+        return Response({"detail": "Tournament marked as finished."}, status=200)

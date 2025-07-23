@@ -42,4 +42,5 @@ def generate_final_round(tournament):
             create_match_player(player=group[idx], team=team, match=match)
 
     tournament.rounds = current_round
-    tournament.save(update_fields=['rounds'])
+    tournament.final_round = current_round
+    tournament.save(update_fields=['rounds', 'final_round'])
