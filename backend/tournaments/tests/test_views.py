@@ -40,7 +40,6 @@ class TournamentViewTests(APITestCase):
     def test_create_tournament(self):
         """Should successfully create a tournament with 4 players."""
         response = self.create_tournament()
-        print(response)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Tournament.objects.count(), 1)
         self.assertEqual(Player.objects.count(), 4)

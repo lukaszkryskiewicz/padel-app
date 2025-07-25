@@ -21,7 +21,7 @@ def generate_final_round(tournament):
     players = [players_dict[pid] for pid in player_ids_in_order]
 
     all_courts = list(tournament.courts.all())
-    current_round = tournament.rounds + 1
+    current_round = tournament.number_of_rounds + 1
 
     pairing_logic = {
         1: [(0, 'team1'), (2, 'team1'), (1, 'team2'), (3, 'team2')],
@@ -41,6 +41,6 @@ def generate_final_round(tournament):
         for idx, team in pairing_logic[int(tournament.final_match)]:
             create_match_player(player=group[idx], team=team, match=match)
 
-    tournament.rounds = current_round
+    tournament.number_of_rounds = current_round
     tournament.final_round = current_round
-    tournament.save(update_fields=['rounds', 'final_round'])
+    tournament.save(update_fields=['number_of_rounds', 'final_round'])

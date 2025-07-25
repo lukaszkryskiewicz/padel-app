@@ -38,13 +38,13 @@ class TournamentModelTest(TestCase):
 
     def test_rounds_field_updates(self):
         """Should update rounds field after incrementation"""
-        tournament = TournamentFactory(rounds=2)
-        self.assertEqual(tournament.rounds, 2)
+        tournament = TournamentFactory(number_of_rounds=2)
+        self.assertEqual(tournament.number_of_rounds, 2)
 
-        tournament.rounds += 1
+        tournament.number_of_rounds += 1
         tournament.save()
         tournament.refresh_from_db()
-        self.assertEqual(tournament.rounds, 3)
+        self.assertEqual(tournament.number_of_rounds, 3)
 
 class PlayerModelTest(TestCase):
     def setUp(self):

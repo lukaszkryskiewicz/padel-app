@@ -5,7 +5,7 @@ from backend.tournaments.models import Match, MatchPlayer, Tournament
 def generate_americano_round(tournament):
     all_players = list(tournament.players.all())
     all_courts = list(tournament.courts.all())
-    current_round = tournament.rounds + 1
+    current_round = tournament.number_of_rounds + 1
 
     if len(all_players) < 4 or len(all_players) % 4 != 0 or len(all_courts) < 1 :
         return
@@ -40,8 +40,8 @@ def generate_americano_round(tournament):
         tournament.status = Tournament.TournamentStatus.IN_PROGRESS
         tournament.save(update_fields=['status'])
 
-    tournament.rounds = current_round
-    tournament.save(update_fields=['rounds'])
+    tournament.number_of_rounds = current_round
+    tournament.save(update_fields=['number_of_rounds'])
 
 
 

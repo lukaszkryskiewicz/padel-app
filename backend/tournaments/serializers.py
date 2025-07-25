@@ -43,7 +43,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tournament
-        fields = ['id', 'status', 'rounds', 'final_round', 'title', 'format', 'result_sorting', 'team_format', 'final_match',
+        fields = ['id', 'status', 'number_of_rounds', 'final_round', 'title', 'format', 'result_sorting', 'team_format', 'final_match',
                   'points_per_match', 'created_at', 'players', 'courts']
 
 
@@ -121,7 +121,8 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
         fields = ['id','round_number', 'court',
-                  'team_1_score', 'team_2_score', 'played', 'players']
+                  'team_1_score', 'team_2_score', 'played', 'players', 'updated_at']
+        read_only_fields = ['updated_at']
 
     def get_players(self, obj):
         match_players = MatchPlayer.objects.filter(match=obj).select_related('player')
@@ -132,7 +133,7 @@ class MatchUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Match
-        fields = ['id', 'team_1_score', 'team_2_score', 'played']
+        fields = ['id', 'team_1_score', 'team_2_score', 'played', 'updated_at']
 
     def validate(self, data):
         # Check that if played=True, both scores are provided
@@ -151,6 +152,7 @@ class SingleMatchUpdateSerializer(serializers.Serializer):
     team_1_score = serializers.IntegerField(required=False, allow_null=True)
     team_2_score = serializers.IntegerField(required=False, allow_null=True)
     played = serializers.BooleanField()
+    updated_at = serializers.DateTimeField()
 
     def validate(self, data):
         if data.get('played') and (

@@ -1,5 +1,5 @@
 import factory
-from backend.tournaments.models import Tournament, Court, Match, Player, MatchPlayer
+from backend.tournaments.models import Tournament, Court, Match, Player, MatchPlayer, RankingSnapshot
 from faker import Faker
 from django.db import models
 
@@ -9,14 +9,14 @@ class TournamentFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Tournament
 
-    title = factory.Faker('sentence', nb_words=3)
+    title = factory.Faker('sentence', nb_words=2)
     format = factory.Faker('random_element', elements=Tournament.TournamentFormat.values)
     result_sorting = factory.Faker('random_element', elements=Tournament.ResultSorting.values)
     team_format = factory.Faker('random_element', elements=Tournament.TeamFormat.values)
     final_match = factory.Faker('random_element', elements=Tournament.FinalMatch.values)
     points_per_match = factory.Faker('random_int', min=1, max=50)
     status = Tournament.TournamentStatus.NEW
-    rounds = 0
+    number_of_rounds = 0
 
 class CourtFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -40,7 +40,7 @@ class MatchFactory(factory.django.DjangoModelFactory):
     tournament = factory.SubFactory(TournamentFactory)
     court = factory.SubFactory(CourtFactory, tournament=factory.SelfAttribute('..tournament'))
     round_number = factory.LazyAttribute(
-        lambda o: faker.random_int(min=1, max=o.tournament.rounds + 1)
+        lambda o: faker.random_int(min=1, max=o.tournament.number_of_rounds + 1)
     )
 
     team_1_score = factory.LazyAttribute(
@@ -50,6 +50,7 @@ class MatchFactory(factory.django.DjangoModelFactory):
         lambda o: faker.random_int(min=0, max=50) if o.played else None
     )
     played = factory.Faker('pybool')
+    updated_at = factory.Faker('date_time_this_year')
 
 class MatchPlayerFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -58,6 +59,21 @@ class MatchPlayerFactory(factory.django.DjangoModelFactory):
     match = factory.SubFactory(MatchFactory)
     player = factory.SubFactory(PlayerFactory, tournament=factory.SelfAttribute('..match.tournament'))
     team = factory.Faker('random_element', elements=MatchPlayer.TeamChoices.values)
+
+
+class RankingSnapshotFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = RankingSnapshot
+
+    tournament = factory.SubFactory(TournamentFactory)
+    player = factory.SubFactory(PlayerFactory, tournament=factory.SelfAttribute('..tournament'))
+    round_number = factory.LazyAttribute(
+        lambda o: faker.random_int(min=1, max=o.tournament.number_of_rounds + 1)
+    )
+    points = factory.LazyAttribute(
+        lambda o: faker.random_int(min=1, max=o.tournament.points_per_match)
+    )
+    is_winner = factory.Faker('pybool')
 
 class TournamentWithRelationsFactory(TournamentFactory):
     """
@@ -95,5 +111,5 @@ class TournamentWithRelationsFactory(TournamentFactory):
             self.rounds = self.matches.aggregate(
                 max_round=models.Max('round_number')
             )['max_round'] or 0
-            self.save(update_fields=['rounds'])
+            self.save(update_fields=['number_of_rounds'])
 

@@ -20,6 +20,17 @@ class TournamentListCreateView(generics.ListCreateAPIView):
             return TournamentCreateSerializer
         return TournamentSerializer
 
+    def create(self, request, *args, **kwargs):
+        # Validate and creates object
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        tournament = serializer.save()
+
+        # Serialize new object and return to frontend
+        output_serializer = TournamentSerializer(tournament, context=self.get_serializer_context())
+        headers = self.get_success_headers(output_serializer.data)
+        return Response(output_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class TournamentRetriveView(generics.RetrieveAPIView):
     """
@@ -70,6 +81,18 @@ class MatchUpdateView(generics.UpdateAPIView):
     queryset = Match.objects.all()
     serializer_class = MatchUpdateSerializer
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        user_updated_at = request.data.get('updated_at')
+        if user_updated_at and str(instance.updated_at) != str(user_updated_at):
+            return Response(
+            {"detail": "Conflict: Match has been updated in the meantime", "match_id": instance.id},
+            status=status.HTTP_409_CONFLICT
+        )
+
+        return super().update(request, *args,**kwargs)
+
+
 class RoundResultsUpdateView(generics.GenericAPIView):
     """
     PATCH: Updates multiple match results for one round in a tournament.
@@ -100,6 +123,24 @@ class RoundResultsUpdateView(generics.GenericAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+        conflict_matches = []
+        for result in serializer.validated_data['results']:
+            match = get_object_or_404(Match, pk=result['match_id'], tournament=tournament)
+            user_update_at = result.get('updated_at')
+            if user_update_at and str(user_update_at) != str(match.updated_at):
+                conflict_matches.append(match.id)
+
+
+        if conflict_matches:
+            return Response(
+                {
+                    "error": "One or more matches have been updated by antorhe user.",
+                    "conflict_match_ids": conflict_matches,
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
 
         for result in serializer.validated_data['results']:
             match = get_object_or_404(Match, pk=result['match_id'], tournament=tournament)

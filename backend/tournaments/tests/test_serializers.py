@@ -128,7 +128,8 @@ class TournamentSerializerTest(TestCase):
             'id': self.tournament.id,
             'title': self.tournament.title,
             'status': self.tournament.status,
-            'rounds': self.tournament.rounds,
+            'number_of_rounds': self.tournament.number_of_rounds,
+            'final_round': self.tournament.final_round,
             'format': self.tournament.format,
             'result_sorting': self.tournament.result_sorting,
             'team_format': self.tournament.team_format,
@@ -287,7 +288,8 @@ class TestRoundResultsSerializer(TestCase):
             "match_id": match.id,
             "team_1_score": 21,
             "team_2_score": 17,
-            "played": True
+            "played": True,
+            "updated_at": match.updated_at.isoformat()
         } for match in self.matches]
 
     def test_correct_data(self):

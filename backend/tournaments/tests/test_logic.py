@@ -24,7 +24,7 @@ class AmericanoLogicTest(TestCase):
         players_in_matches = MatchPlayer.objects.filter(match__in=matches)
         self.assertEqual(players_in_matches.count(), 12)
 
-        self.assertEqual(self.tournament.rounds, 1)
+        self.assertEqual(self.tournament.number_of_rounds, 1)
 
     def test_each_match_has_4_players_divided_into_two_teams(self):
         # generate two rounds
@@ -47,7 +47,7 @@ class AmericanoLogicTest(TestCase):
             self.assertEqual(matches.count(), 3)
 
             self.assertEqual(Match.objects.filter(tournament=self.tournament).count(), 3 * i)
-            self.assertEqual(self.tournament.rounds, i)
+            self.assertEqual(self.tournament.number_of_rounds, i)
 
     def test_when_players_number_is_lower_than_4_or_not_divisable_by_4(self):
         Player.objects.filter(tournament=self.tournament).delete()
@@ -69,4 +69,4 @@ class AmericanoLogicTest(TestCase):
         tournament.refresh_from_db()
 
         self.assertEqual(tournament.status, Tournament.TournamentStatus.IN_PROGRESS)
-        self.assertEqual(tournament.rounds, 1)
+        self.assertEqual(tournament.number_of_rounds, 1)

@@ -28,7 +28,7 @@ class Tournament(models.Model):
 
     title = models.CharField(max_length=30, default='Padel Tournament')
     status = models.CharField(max_length=20, choices=TournamentStatus.choices, default=TournamentStatus.NEW)
-    rounds = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
+    number_of_rounds = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], default=0)
     final_round = models.PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(100)],
         null=True,
@@ -45,7 +45,7 @@ class Tournament(models.Model):
 
     # checks if final_round is not greater than rounds number
     def clean(self):
-        if self.final_round and self.final_round > self.rounds:
+        if self.final_round and self.final_round > self.number_of_rounds:
             raise ValidationError({
                 "final_round": _("Final round cannot be greater than total rounds.")
             })
@@ -118,6 +118,8 @@ class Match(models.Model):
         through='MatchPlayer',
         related_name='matches'
     )
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Match R{self.round_number} on Court {self.court} (Tournament: {self.tournament.title})"
