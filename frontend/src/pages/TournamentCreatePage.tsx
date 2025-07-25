@@ -4,17 +4,26 @@ import { Trophy } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { TournamentFormValues } from '@/types/tournament';
 import { createTournamentApi } from '@/api/tournaments';
+import { useTournamentStore } from '@/stores/tournamentStore';
+import { useNavigate } from 'react-router';
 
 const TournamentCreatePage = () => {
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const resetTournamentFormValues = useTournamentStore(
+    (state) => state.resetTournamentFormValues
+  );
+  const navigate = useNavigate();
+  const setTournament = useTournamentStore((state) => state.addTournament);
 
   const handleCreateTournament = async (data: TournamentFormValues) => {
     setIsSubmitting(true);
 
     try {
       const response = await createTournamentApi(data);
-      console.log(response);
+      setTournament(response.data);
+      resetTournamentFormValues();
+      navigate(`/dashboard/${response.data.id}`);
     } catch (error) {
       console.error('Błąd:', error);
     } finally {

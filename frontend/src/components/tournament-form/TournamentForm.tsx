@@ -9,24 +9,26 @@ import type {
   TournamentFormValues,
   TournamentFormProps,
 } from '@/types/tournament';
+import { useTournamentStore } from '@/stores/tournamentStore';
+import { useEffect } from 'react';
 
 const TournamentForm = ({
   onSubmit,
   isSubmitting = false,
 }: TournamentFormProps) => {
   const { t } = useTranslation();
+  const defaultValues = useTournamentStore((state) => state.tournamentForm);
+  const setFormValues = useTournamentStore(
+    (state) => state.setTournamentFormValues
+  );
+
   const methods = useForm<TournamentFormValues>({
-    defaultValues: {
-      title: '',
-      format: 'AMERICANO',
-      pointsPerMatch: '21',
-      resultSorting: 'POINTS',
-      teamFormat: 'PLAYER',
-      finalMatch: '1',
-      players: [],
-      courts: [],
-    },
+    defaultValues: defaultValues,
   });
+
+  useEffect(() => {
+    methods.reset(defaultValues);
+  }, [defaultValues]);
 
   const handleSubmit = methods.handleSubmit((data) => {
     if (onSubmit) {
@@ -43,7 +45,15 @@ const TournamentForm = ({
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form
+        onBlur={(e) => {
+          if (e.target.form === e.currentTarget) {
+            setFormValues(methods.getValues());
+          }
+        }}
+        onSubmit={handleSubmit}
+        className="space-y-6"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <TournamentSettings />
           <div className="space-y-6">

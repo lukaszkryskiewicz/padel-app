@@ -28,7 +28,7 @@ export const RadioGroupField = ({
           <div key={opt.value} className="flex items-center space-x-2">
             <RadioGroupItem value={opt.value} id={`${name}-${opt.value}`} />
             <Label htmlFor={`${name}-${opt.value}`}>
-              {opt.i18nKey ? t(opt.i18nKey) : opt.value}
+              {opt.i18nKey ? t(opt.i18nKey) : opt.label}
             </Label>
           </div>
         ))}
