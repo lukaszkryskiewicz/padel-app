@@ -190,3 +190,28 @@ export interface MatchResultsBadgeProps {
   isDraw: boolean;
   winningTeam?: number;
 }
+
+// store types
+
+export interface TournamentState {
+  tournaments: Record<number, TournamentApiValues>;
+  matches: Record<number, Match[]>;
+  standings: Record<number, Standings[]>;
+  tournamentForm: TournamentFormValues;
+  matchesInProgress: Record<number, Match[]>;
+
+  // actions
+  addTournament: (t: TournamentApiValues) => void;
+  updateTournament: (
+    patch: Partial<TournamentApiValues> & { id: number }
+  ) => void;
+  addMatches: (tournamentId: number, newMatches: Match[]) => void;
+  updateMatches: (tournamentId: number, updatedMatches: Match[]) => void;
+  updateSingleMatch: (tournamentId: number, updatedMatch: Match) => void;
+  setStandings: (tournamentId: number, standings: Standings[]) => void;
+  setTournamentFormValues: (formValues: TournamentFormValues) => void;
+  resetTournamentFormValues: () => void;
+  setMatchesInProgress: (tournamentId: number, matches: Match[]) => void;
+  setSingleMatchInProgress: (tournamentId: number, match: Match) => void;
+  resetMatchesInProgress: (tournamentId: number) => void;
+}
