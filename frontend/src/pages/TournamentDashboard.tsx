@@ -7,7 +7,7 @@ import {
 } from '@/api/tournaments';
 import { useParams } from 'react-router';
 import { Loader } from 'lucide-react';
-import type { TournamentApiValues, Match } from '@/types/tournament';
+import type { Match } from '@/types/tournament';
 import { TournamentDetails } from '@/components/tournament/TournamentDetails';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -17,13 +17,21 @@ import { useTranslation } from 'react-i18next';
 import RoundTab from '@/components/rounds/RoundTab';
 import { mapMatchesToPayload } from '@/lib/tournament-utils';
 import StandingsTab from '@/components/standings/StandingsTab';
+import { useTournamentStore } from '@/stores/tournamentStore';
+import axios from 'axios';
 
 const TournamentDashboard = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
-  const [tournament, setTournament] = useState<TournamentApiValues | null>(
-    null
+
+  const tournament = useTournamentStore((state) => id && state.tournaments[id]);
+  const updateTournament = useTournamentStore(
+    (state) => state.updateTournament
+  );
+  const setCachedRounds = useTournamentStore((state) => state.setCachedRound);
+  const resetMatchesInProgress = useTournamentStore(
+    (state) => state.resetMatchesInProgress
   );
   const [activeTab, setActiveTab] = useState<string>('tournamentInfo');
 
@@ -37,7 +45,7 @@ const TournamentDashboard = () => {
 
       try {
         const response = await getSingleTournamentApi(id);
-        setTournament(response.data);
+        updateTournament(response.data);
       } catch (error) {
         console.error('Error fetching tournament:', error);
       } finally {
@@ -56,7 +64,7 @@ const TournamentDashboard = () => {
     );
   }
 
-  if (!tournament) {
+  if (!tournament || !id) {
     return (
       <p className="text-center text-gray-500">{t('dashboard.notFound')}</p>
     );
@@ -74,8 +82,18 @@ const TournamentDashboard = () => {
 
       const payload = mapMatchesToPayload(roundData);
       await updateRound(id, roundId, payload);
+
+      setCachedRounds(id, String(roundId), roundData);
+      resetMatchesInProgress(id, String(roundId));
     } catch (error) {
-      console.error('Failed to save round scores:', error);
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        console.error(
+          'Round was already updated by other user, please refresh the page'
+        );
+      } else {
+        console.error('Failed to save round scores:', error);
+      }
+      throw error;
     }
   };
 
@@ -87,7 +105,7 @@ const TournamentDashboard = () => {
     try {
       setLoading(true);
       await saveRoundScores(roundId, roundData);
-      if (tournament.finalRound === tournament.rounds) {
+      if (tournament.finalRound === tournament.numberOfRounds) {
         await endTournament();
         return;
       } else {
@@ -102,6 +120,7 @@ const TournamentDashboard = () => {
       setLoading(false);
     }
   };
+
   const generateRound = async (finalRound = false) => {
     if (!id) {
       console.warn('No tournament ID provided');
@@ -110,8 +129,9 @@ const TournamentDashboard = () => {
     try {
       await generateNewRound(id, finalRound);
       const response = await getSingleTournamentApi(id);
-      setTournament(response.data);
-      setActiveTab(`round${response.data.rounds}`);
+      updateTournament(response.data);
+      setActiveTab(`round${response.data.numberOfRounds}`);
+      console.log(response.data);
     } catch (error) {
       console.error('Failed to generete round:', error);
     }
@@ -145,7 +165,7 @@ const TournamentDashboard = () => {
                 <TabsTrigger value="tournamentInfo" className="px-6 py-3">
                   {t('dashboard.tournamentInfo')}
                 </TabsTrigger>
-                {[...Array(tournament.rounds)].map((_, i) => (
+                {[...Array(tournament.numberOfRounds)].map((_, i) => (
                   <TabsTrigger
                     key={`round${i + 1}`}
                     value={`round${i + 1}`}
@@ -154,7 +174,7 @@ const TournamentDashboard = () => {
                     {t('round.round', { round: i + 1 })}
                   </TabsTrigger>
                 ))}
-                {tournament.rounds > 0 && (
+                {tournament.numberOfRounds > 0 && (
                   <TabsTrigger value="playersRanking" className="px-6 py-3">
                     {t('standings.title')}
                   </TabsTrigger>
@@ -163,12 +183,12 @@ const TournamentDashboard = () => {
               <TabsContent value="tournamentInfo">
                 <TournamentDetails tournament={tournament} />
               </TabsContent>
-              {[...Array(tournament.rounds)].map((_, i) => (
+              {[...Array(tournament.numberOfRounds)].map((_, i) => (
                 <TabsContent key={`round${i + 1}`} value={`round${i + 1}`}>
                   <RoundTab
                     roundNumber={i + 1}
                     tournamentId={id}
-                    latestRound={tournament.rounds}
+                    latestRound={tournament.numberOfRounds}
                     pointsPerMatch={tournament.pointsPerMatch}
                     courts={tournament.courts.length}
                     saveScoresAndGenerateRound={saveScoresAndGenerateRound}
@@ -177,11 +197,11 @@ const TournamentDashboard = () => {
                   />
                 </TabsContent>
               ))}
-              {tournament.rounds > 0 && (
+              {tournament.numberOfRounds > 0 && (
                 <TabsContent value="playersRanking">
                   <StandingsTab
                     tournamentId={id}
-                    roundNumber={tournament.rounds}
+                    roundNumber={tournament.numberOfRounds}
                   />
                 </TabsContent>
               )}

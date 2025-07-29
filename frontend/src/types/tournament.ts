@@ -27,7 +27,7 @@ export interface TournamentApiValues extends TournamentFormValues {
   id: number;
   status: string;
   createdAt: string;
-  rounds: number;
+  numberOfRounds: number;
   finalRound: number;
 }
 
@@ -98,6 +98,7 @@ export interface Match {
   team_2Score: number | null;
   played: boolean;
   players: MatchPlayers[];
+  updatedAt: string;
 }
 
 export interface RoundTabProps {
@@ -139,6 +140,7 @@ export interface CourtViewProps {
   match: Match;
   updateMatchInRound: (match: Match) => void;
   pointsPerMatch: string;
+  isReadOnly: boolean;
 }
 
 export interface ScoreModalProps {
@@ -153,6 +155,7 @@ export interface MatchUpdatePayload {
   team_1Score: number | null;
   team_2Score: number | null;
   played: boolean;
+  updatedAt: string;
 }
 
 interface RoundsStanding {
@@ -194,24 +197,39 @@ export interface MatchResultsBadgeProps {
 // store types
 
 export interface TournamentState {
-  tournaments: Record<number, TournamentApiValues>;
-  matches: Record<number, Match[]>;
-  standings: Record<number, Standings[]>;
+  tournaments: Record<string, TournamentApiValues>;
+  standings: Record<string, Standings[]>;
   tournamentForm: TournamentFormValues;
-  matchesInProgress: Record<number, Match[]>;
+  matchesInProgress: Record<string, Record<string, Match[]>>;
+  cachedRounds: Record<string, Record<string, Match[]>>;
 
   // actions
   addTournament: (t: TournamentApiValues) => void;
   updateTournament: (
-    patch: Partial<TournamentApiValues> & { id: number }
+    patch: Partial<TournamentApiValues> & { id: string }
   ) => void;
-  addMatches: (tournamentId: number, newMatches: Match[]) => void;
-  updateMatches: (tournamentId: number, updatedMatches: Match[]) => void;
-  updateSingleMatch: (tournamentId: number, updatedMatch: Match) => void;
-  setStandings: (tournamentId: number, standings: Standings[]) => void;
+  setStandings: (tournamentId: string, standings: Standings[]) => void;
   setTournamentFormValues: (formValues: TournamentFormValues) => void;
   resetTournamentFormValues: () => void;
-  setMatchesInProgress: (tournamentId: number, matches: Match[]) => void;
-  setSingleMatchInProgress: (tournamentId: number, match: Match) => void;
-  resetMatchesInProgress: (tournamentId: number) => void;
+  setMatchesInProgress: (
+    tournamentId: string,
+    roundId: string,
+    matches: Match[]
+  ) => void;
+  setSingleMatchInProgress: (
+    tournamentId: string,
+    roundId: string,
+    match: Match
+  ) => void;
+  resetMatchesInProgress: (tournamentId: string, roundId: string) => void;
+  setCachedRound: (
+    tournamentId: string,
+    roundNumber: string,
+    matches: Match[]
+  ) => void;
+  updateCachedRound: (
+    tournamentId: string,
+    roundNumber: string,
+    matchesToUpdate: Match[]
+  ) => void;
 }

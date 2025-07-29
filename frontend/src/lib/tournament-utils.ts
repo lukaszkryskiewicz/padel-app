@@ -21,5 +21,6 @@ export function mapMatchesToPayload(matches: Match[]): MatchUpdatePayload[] {
     team_1Score: match.team_1Score,
     team_2Score: match.team_2Score,
     played: match.played,
+    updatedAt: match.updatedAt,
   }));
 }

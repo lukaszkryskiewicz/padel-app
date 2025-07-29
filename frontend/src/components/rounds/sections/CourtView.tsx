@@ -9,6 +9,7 @@ const CourtView = ({
   match,
   updateMatchInRound,
   pointsPerMatch,
+  isReadOnly,
 }: CourtViewProps) => {
   const [modal, setModal] = useState(false);
   const [activeTeam, setActiveTeam] = useState<'1' | '2' | null>(null);
@@ -39,7 +40,6 @@ const CourtView = ({
     }
     setModal(false);
   };
-
   return (
     <>
       {modal &&
@@ -68,8 +68,15 @@ const CourtView = ({
               </div>
               <div className="flex items-center justify-center mt-4">
                 <div
-                  onClick={() => handleClick('1')}
-                  className="w-12 h-12 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center"
+                  onClick={() => {
+                    if (!isReadOnly) handleClick('1');
+                  }}
+                  className={`w-12 h-12 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center transition ${
+                    !isReadOnly
+                      ? 'cursor-pointer hover:scale-105'
+                      : 'cursor-not-allowed opacity-70'
+                  }`}
+                  aria-disabled={isReadOnly}
                 >
                   {!match.played && <Users className="w-6 h-6 text-gray-500" />}
                   <span className="font-bold">{match.team_1Score}</span>
@@ -87,8 +94,15 @@ const CourtView = ({
               </div>
               <div className="flex items-center justify-center mt-4">
                 <div
-                  onClick={() => handleClick('2')}
-                  className="w-12 h-12 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center"
+                  onClick={() => {
+                    if (!isReadOnly) handleClick('2');
+                  }}
+                  className={`w-12 h-12 bg-white rounded-full border-4 border-gray-300 flex items-center justify-center transition ${
+                    !isReadOnly
+                      ? 'cursor-pointer hover:scale-105'
+                      : 'cursor-not-allowed opacity-70'
+                  }`}
+                  aria-disabled={isReadOnly}
                 >
                   {!match.played && <Users className="w-6 h-6 text-gray-500" />}
                   <span className="font-bold">{match.team_2Score}</span>

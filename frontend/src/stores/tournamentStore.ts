@@ -7,19 +7,19 @@ export const useTournamentStore = create<TournamentState>()(
     persist(
       (set) => ({
         tournaments: {},
-        matches: {},
         standings: {},
         tournamentForm: {
           title: '',
-          format: 'AMERICANO',
-          pointsPerMatch: '11',
+          format: 'MEXICANO',
+          pointsPerMatch: '21',
           resultSorting: 'POINTS',
-          teamFormat: 'PLAYER',
+          teamFormat: 'PAIR',
           finalMatch: '1',
           courts: [],
           players: [],
         },
         matchesInProgress: {},
+        cachedRounds: {},
         addTournament: (newTournament) =>
           set((state) => ({
             tournaments: {
@@ -35,39 +35,6 @@ export const useTournamentStore = create<TournamentState>()(
                 ...state.tournaments[patch.id],
                 ...patch,
               },
-            },
-          })),
-        addMatches: (tournamentId, newMatches) =>
-          set((state) => ({
-            matches: {
-              ...state.matches,
-              [tournamentId]: [
-                ...(state.matches[tournamentId] || []),
-                ...newMatches,
-              ],
-            },
-          })),
-        updateMatches: (tournamentId, matchesToUpdate) =>
-          set((state) => ({
-            matches: {
-              ...state.matches,
-              [tournamentId]: (state.matches[tournamentId] || []).map(
-                (match) => {
-                  const findMatch = matchesToUpdate.find(
-                    (matchToUpdate) => matchToUpdate.id === match.id
-                  );
-                  return findMatch ? { ...match, ...findMatch } : match;
-                }
-              ),
-            },
-          })),
-        updateSingleMatch: (tournamentId, updatedMatch) =>
-          set((state) => ({
-            matches: {
-              ...state.matches,
-              [tournamentId]: (state.matches[tournamentId] || []).map((m) =>
-                m.id === updatedMatch.id ? { ...m, ...updatedMatch } : m
-              ),
             },
           })),
         setStandings: (tournamentId, standings) =>
@@ -91,40 +58,76 @@ export const useTournamentStore = create<TournamentState>()(
               players: [],
             },
           })),
-        setMatchesInProgress: (tournamentId, matches) =>
+        setMatchesInProgress: (tournamentId, roundId, matches) =>
           set((state) => ({
             matchesInProgress: {
               ...state.matchesInProgress,
-              [tournamentId]: matches,
+              [tournamentId]: {
+                ...(state.matchesInProgress[tournamentId] || {}),
+                [roundId]: matches,
+              },
             },
           })),
-        setSingleMatchInProgress: (tournamentId, match) =>
+        setSingleMatchInProgress: (tournamentId, roundId, match) =>
           set((state) => ({
             matchesInProgress: {
               ...state.matchesInProgress,
-              [tournamentId]: (state.matchesInProgress[tournamentId] || []).map(
-                (singleMatch) =>
+              [tournamentId]: {
+                ...(state.matchesInProgress[tournamentId] || {}),
+                [roundId]: (
+                  state.matchesInProgress[tournamentId]?.[roundId] || []
+                ).map((singleMatch) =>
                   singleMatch.id === match.id ? match : singleMatch
-              ),
+                ),
+              },
             },
           })),
-        resetMatchesInProgress: (tournamentId) =>
+        resetMatchesInProgress: (tournamentId, roundId) =>
           set((state) => ({
             matchesInProgress: {
               ...state.matchesInProgress,
-              [tournamentId]: [],
+              [tournamentId]: {
+                ...(state.matchesInProgress[tournamentId] || {}),
+                [roundId]: [],
+              },
+            },
+          })),
+        setCachedRound: (tournamentId, roundNumber, matches) =>
+          set((state) => ({
+            cachedRounds: {
+              ...state.cachedRounds,
+              [tournamentId]: {
+                ...(state.cachedRounds[tournamentId] || {}),
+                [roundNumber]: matches,
+              },
+            },
+          })),
+        updateCachedRound: (tournamentId, roundNumber, matchesToUpdate) =>
+          set((state) => ({
+            cachedRounds: {
+              ...state.cachedRounds,
+              [tournamentId]: {
+                ...(state.matchesInProgress[tournamentId] || {}),
+                [roundNumber]: (
+                  state.cachedRounds[tournamentId]?.[roundNumber] || []
+                ).map((match) => {
+                  const findMatch = matchesToUpdate.find(
+                    (matchToUpdate) => matchToUpdate.id === match.id
+                  );
+                  return findMatch ? { ...match, ...findMatch } : match;
+                }),
+              },
             },
           })),
       }),
-
       {
         name: 'padel-tournaments',
         partialize: (state) => ({
           tournaments: state.tournaments,
-          matches: state.matches,
           standings: state.standings,
           tournamentForm: state.tournamentForm,
           matchesInProgress: state.matchesInProgress,
+          cachedRounds: state.cachedRounds,
         }),
       }
     )
