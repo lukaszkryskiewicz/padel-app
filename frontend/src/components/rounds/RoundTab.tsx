@@ -43,8 +43,8 @@ const RoundTab = ({
       setLoading(false);
       return;
     }
-    // checks if the round was saved as in progress ins store
-    if (matchesInProgress[tournamentId]?.[roundNumber]) {
+    // checks if the round was saved as in progress in store
+    if (matchesInProgress[tournamentId]?.[roundNumber]?.length) {
       setRoundLocal(matchesInProgress[tournamentId][roundNumber]);
       setLoading(false);
       return;

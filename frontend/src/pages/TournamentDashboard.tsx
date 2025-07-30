@@ -201,6 +201,7 @@ const TournamentDashboard = () => {
                 <TabsContent value="playersRanking">
                   <StandingsTab
                     tournamentId={id}
+                    tournamentStatus={tournament.status}
                     roundNumber={tournament.numberOfRounds}
                   />
                 </TabsContent>

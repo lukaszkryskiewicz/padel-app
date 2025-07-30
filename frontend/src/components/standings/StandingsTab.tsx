@@ -4,10 +4,20 @@ import { getPlayersRanking } from '@/api/tournaments';
 import { useTranslation } from 'react-i18next';
 import StandingsHeader from './sections/StandingsHeader';
 import StandingsTable from './sections/StandingsTable';
+import { useTournamentStore } from '@/stores/tournamentStore';
 
-const StandingsTab = ({ tournamentId, roundNumber }: StandingsTabProps) => {
+const StandingsTab = ({
+  tournamentId,
+  tournamentStatus,
+  roundNumber,
+}: StandingsTabProps) => {
   const { t } = useTranslation();
   const [standings, setStandings] = useState<Standings[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const cachedStandings = useTournamentStore(
+    (state) => (tournamentId && state.standings[tournamentId]) || []
+  );
+  const setCachedStandings = useTournamentStore((state) => state.setStandings);
 
   useEffect(() => {
     const fetchRanking = async () => {
@@ -15,10 +25,19 @@ const StandingsTab = ({ tournamentId, roundNumber }: StandingsTabProps) => {
         console.error('No tournament ID!');
         return;
       }
+
+      //if cached shows last ranking
+      if (cachedStandings.length) {
+        setStandings(cachedStandings);
+      }
+
+      // then try to update ranking
       try {
         const response = await getPlayersRanking(tournamentId);
         setStandings(response.data);
+        setCachedStandings(tournamentId, response.data);
       } catch (error) {
+        setError(t('standings.updateError'));
         console.error('Error fetching tournament:', error);
       }
     };
@@ -43,7 +62,13 @@ const StandingsTab = ({ tournamentId, roundNumber }: StandingsTabProps) => {
       {standings.length > 0 ? (
         <>
           <StandingsHeader standings={standings} />
-          <StandingsTable standings={standings} />
+          <StandingsTable
+            standings={standings}
+            tournamentStatus={tournamentStatus}
+          />
+          {error && (
+            <div className="text-center text-red-500 mt-4">{error}</div>
+          )}
         </>
       ) : (
         <span className="flex justify-center text-2xl">

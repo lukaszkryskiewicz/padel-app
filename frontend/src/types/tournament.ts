@@ -181,6 +181,7 @@ export interface Standings {
 
 export interface StandingsTabProps {
   tournamentId: string | undefined;
+  tournamentStatus: string;
   roundNumber: number;
 }
 
