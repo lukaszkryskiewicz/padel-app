@@ -4,7 +4,7 @@ from backend.tournaments.models import RankingSnapshot, Match, MatchPlayer
 
 def get_simplified_ranking(tournament_id):
     """
-        Returns players ranking in tournament for final round_generation:
+        Returns players ranking in tournament for final round_generation or mexicano round:
         [
             {
                 "id": xxx,
