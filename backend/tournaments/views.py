@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils.dateparse import parse_datetime
 from rest_framework import generics, status
 from rest_framework.response import Response
 from django.db.models import Max
@@ -84,11 +85,16 @@ class MatchUpdateView(generics.UpdateAPIView):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         user_updated_at = request.data.get('updated_at')
-        if user_updated_at and str(instance.updated_at) != str(user_updated_at):
-            return Response(
-            {"detail": "Conflict: Match has been updated in the meantime", "match_id": instance.id},
-            status=status.HTTP_409_CONFLICT
-        )
+
+        if user_updated_at:
+            #check without microsecond to avoid conflicts
+            db_time = instance.updated_at.replace(microsecond=0)
+            req_time = parse_datetime(user_updated_at).replace(microsecond=0)
+            if db_time != req_time:
+                return Response(
+                {"detail": "Conflict: Match has been updated in the meantime", "match_id": instance.id},
+                status=status.HTTP_409_CONFLICT
+            )
 
         return super().update(request, *args,**kwargs)
 
@@ -135,7 +141,7 @@ class RoundResultsUpdateView(generics.GenericAPIView):
         if conflict_matches:
             return Response(
                 {
-                    "error": "One or more matches have been updated by antorhe user.",
+                    "error": "One or more matches have been updated by another user.",
                     "conflict_match_ids": conflict_matches,
                 },
                 status=status.HTTP_400_BAD_REQUEST

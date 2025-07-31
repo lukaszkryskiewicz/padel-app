@@ -17,6 +17,7 @@ class TournamentFactory(factory.django.DjangoModelFactory):
     points_per_match = factory.Faker('random_int', min=1, max=50)
     status = Tournament.TournamentStatus.NEW
     number_of_rounds = 0
+    final_round = None
 
 class CourtFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -40,17 +41,25 @@ class MatchFactory(factory.django.DjangoModelFactory):
     tournament = factory.SubFactory(TournamentFactory)
     court = factory.SubFactory(CourtFactory, tournament=factory.SelfAttribute('..tournament'))
     round_number = factory.LazyAttribute(
-        lambda o: faker.random_int(min=1, max=o.tournament.number_of_rounds + 1)
+        lambda o: o.tournament.number_of_rounds + 1
     )
 
-    team_1_score = factory.LazyAttribute(
-        lambda o: faker.random_int(min=0, max=50) if o.played else None
-    )
-    team_2_score = factory.LazyAttribute(
-        lambda o: faker.random_int(min=0, max=50) if o.played else None
-    )
     played = factory.Faker('pybool')
     updated_at = factory.Faker('date_time_this_year')
+
+    @factory.lazy_attribute
+    def team_1_score(self):
+        if not self.played:
+            return None
+        max_points = getattr(self.tournament, 'points_per_match', 21)
+        return faker.random_int(min=0, max=max_points)
+
+    @factory.lazy_attribute
+    def team_2_score(self):
+        if not self.played:
+            return None
+        max_points = getattr(self.tournament, 'points_per_match', 21)
+        return max_points - (self.team_1_score or 0)
 
 class MatchPlayerFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -108,7 +117,7 @@ class TournamentWithRelationsFactory(TournamentFactory):
         count = extracted or (5 if kwargs.get('full') else None)
         if count:
             MatchFactory.create_batch(count, tournament=self)
-            self.rounds = self.matches.aggregate(
+            self.number_of_rounds = self.matches.aggregate(
                 max_round=models.Max('round_number')
             )['max_round'] or 0
             self.save(update_fields=['number_of_rounds'])

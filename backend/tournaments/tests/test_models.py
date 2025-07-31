@@ -23,6 +23,7 @@ class TournamentModelTest(TestCase):
         self.assertEqual(tournament.team_format, Tournament.TeamFormat.PLAYER)
         self.assertEqual(tournament.final_match, Tournament.FinalMatch.ONE_FOUR_VS_TWO_THREE)
         self.assertEqual(tournament.points_per_match, 21)
+        self.assertEqual(tournament.number_of_rounds, 0)
 
     def test_tournament_str_returns_title_and_date(self):
         """Should return tournament title and created_at in __str__."""
@@ -45,6 +46,15 @@ class TournamentModelTest(TestCase):
         tournament.save()
         tournament.refresh_from_db()
         self.assertEqual(tournament.number_of_rounds, 3)
+
+    def test_final_round_validation(self):
+        """Should rise error when final round > number of rounds"""
+        tournament = TournamentFactory(number_of_rounds=2)
+
+        tournament.final_round = 3
+        with self.assertRaises(ValidationError):
+            tournament.full_clean()
+
 
 class PlayerModelTest(TestCase):
     def setUp(self):

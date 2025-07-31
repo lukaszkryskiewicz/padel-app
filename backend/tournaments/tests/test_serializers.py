@@ -1,11 +1,11 @@
 from django.test import TestCase
 
 from backend.tournaments.factories.tournament_factories import TournamentFactory, PlayerFactory, \
-    TournamentWithRelationsFactory
+    TournamentWithRelationsFactory, MatchPlayerFactory
 from backend.tournaments.logic.americano_single import generate_americano_round
 from backend.tournaments.models import Tournament, Player, Match, MatchPlayer
 from backend.tournaments.serializers import TournamentCreateSerializer, TournamentSerializer, MatchSerializer, \
-    MatchUpdateSerializer, RoundResultsSerializer
+    MatchUpdateSerializer, RoundResultsSerializer, MatchPlayerSerializer
 
 
 class TournamentCreateSerializerTest(TestCase):
@@ -207,6 +207,29 @@ class TestMatchSerializer(TestCase):
         self.assertIsNone(data["team_1_score"])
         self.assertIsNone(data["team_2_score"])
         self.assertFalse(data["played"])
+
+class TestMatchPlayerSerializer(TestCase):
+    """Tests for serializing MatchPlayer objects"""
+    def setUp(self):
+        self.match_player = MatchPlayerFactory()
+
+    def test_serializer_includes_player_id(self):
+        """
+        Should serialize MatchPlayer to include player_id, player name, and team fields with correct values.
+        """
+        serializer = MatchPlayerSerializer(self.match_player)
+        data = serializer.data
+
+        # check all players_id
+        self.assertIn('player_id', data)
+        self.assertEqual(
+            str(self.match_player.player.id),
+            data['player_id']
+        )
+
+        self.assertIn('name', data)
+        self.assertEqual(data['name'], self.match_player.player.name)
+        self.assertEqual(data['team'], self.match_player.team)
 
 class TestMatchUpdateSerializer(TestCase):
     """Tests for updating single match results using MatchUpdateSerializer."""

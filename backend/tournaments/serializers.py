@@ -104,10 +104,11 @@ class MatchPlayerSerializer(serializers.ModelSerializer):
     """Serializer for displaying a player's team in a specific match."""
 
     name = serializers.CharField(source = 'player.name')
+    player_id = serializers.CharField(source = 'player.id')
 
     class Meta:
         model = MatchPlayer
-        fields = ['id', 'name', 'team']
+        fields = ['id', 'name', 'player_id', 'team']
 
 class MatchSerializer(serializers.ModelSerializer):
     """
@@ -139,7 +140,7 @@ class MatchUpdateSerializer(serializers.ModelSerializer):
         # Check that if played=True, both scores are provided
         if data.get('played'):
             if data.get('team_1_score') is None or data.get('team_2_score') is None:
-                raise serializers.ValidationError("Both scores must be provided if the match is marked as played.")
+                raise serializers.ValidationError({"non_field_errors": ["Both scores must be provided if the match is marked as played."]})
         return data
 
 class SingleMatchUpdateSerializer(serializers.Serializer):

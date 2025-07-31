@@ -23,7 +23,7 @@ from backend.tournaments.views import TournamentListCreateView, TournamentRetriv
 urlpatterns = [
     path('', TournamentListCreateView.as_view(), name="tournament-list-create"),
     path('<int:pk>/', TournamentRetriveView.as_view(), name="tournament-retrieve"),
-    path('<int:pk>/matches/', MatchListView.as_view(), name="match-list"),
+    path('<int:tournament_id>/matches/', MatchListView.as_view(), name="match-list"),
     path('<int:tournament_id>/current-round/', CurrentRoundMatchesView.as_view(), name="current-round-matches"),
     path('<int:tournament_id>/<int:round_id>/', SingleRoundMatchesView.as_view(), name="single-round-matches"),
     path('<int:tournament_id>/update-single/<int:pk>/', MatchUpdateView.as_view(), name='single-match-update'),
