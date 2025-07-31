@@ -150,6 +150,11 @@ export interface ScoreModalProps {
   activeTeam: string;
 }
 
+export interface SaveErrorModalProps {
+  generateRound: (isFinal: boolean) => void;
+  setModal: (arg: boolean) => void;
+}
+
 export interface MatchUpdatePayload {
   match_id: number;
   team_1Score: number | null;

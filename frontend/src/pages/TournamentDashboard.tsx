@@ -19,11 +19,14 @@ import { mapMatchesToPayload } from '@/lib/tournament-utils';
 import StandingsTab from '@/components/standings/StandingsTab';
 import { useTournamentStore } from '@/stores/tournamentStore';
 import axios from 'axios';
+import { createPortal } from 'react-dom';
+import SaveErrorModal from '@/components/tournament/shared/SaveErrorModal';
 
 const TournamentDashboard = () => {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(false);
 
   const tournament = useTournamentStore((state) => id && state.tournaments[id]);
   const updateTournament = useTournamentStore(
@@ -87,6 +90,7 @@ const TournamentDashboard = () => {
       resetMatchesInProgress(id, String(roundId));
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setModal(true);
         console.error(
           'Round was already updated by other user, please refresh the page'
         );
@@ -151,74 +155,81 @@ const TournamentDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        <DashboardHeader tournament={tournament} />
-        <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
-              <TabsList className="w-full h-auto p-2 bg-gray-100 rounded-lg flex flex-wrap justify-start gap-2 mb-6">
-                <TabsTrigger value="tournamentInfo" className="px-6 py-3">
-                  {t('dashboard.tournamentInfo')}
-                </TabsTrigger>
-                {[...Array(tournament.numberOfRounds)].map((_, i) => (
-                  <TabsTrigger
-                    key={`round${i + 1}`}
-                    value={`round${i + 1}`}
-                    className="px-6 py-3"
-                  >
-                    {t('round.round', { round: i + 1 })}
+    <>
+      {modal &&
+        createPortal(
+          <SaveErrorModal generateRound={generateRound} setModal={setModal} />,
+          document.body
+        )}
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <DashboardHeader tournament={tournament} />
+          <Card className="shadow-xl bg-white/80 backdrop-blur-sm">
+            <CardContent className="p-6">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full"
+              >
+                <TabsList className="w-full h-auto p-2 bg-gray-100 rounded-lg flex flex-wrap justify-start gap-2 mb-6">
+                  <TabsTrigger value="tournamentInfo" className="px-6 py-3">
+                    {t('dashboard.tournamentInfo')}
                   </TabsTrigger>
+                  {[...Array(tournament.numberOfRounds)].map((_, i) => (
+                    <TabsTrigger
+                      key={`round${i + 1}`}
+                      value={`round${i + 1}`}
+                      className="px-6 py-3"
+                    >
+                      {t('round.round', { round: i + 1 })}
+                    </TabsTrigger>
+                  ))}
+                  {tournament.numberOfRounds > 0 && (
+                    <TabsTrigger value="playersRanking" className="px-6 py-3">
+                      {t('standings.title')}
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+                <TabsContent value="tournamentInfo">
+                  <TournamentDetails tournament={tournament} />
+                </TabsContent>
+                {[...Array(tournament.numberOfRounds)].map((_, i) => (
+                  <TabsContent key={`round${i + 1}`} value={`round${i + 1}`}>
+                    <RoundTab
+                      roundNumber={i + 1}
+                      tournamentId={id}
+                      latestRound={tournament.numberOfRounds}
+                      pointsPerMatch={tournament.pointsPerMatch}
+                      courts={tournament.courts.length}
+                      saveScoresAndGenerateRound={saveScoresAndGenerateRound}
+                      finalRound={tournament.finalRound}
+                      tournamentStatus={tournament.status}
+                    />
+                  </TabsContent>
                 ))}
                 {tournament.numberOfRounds > 0 && (
-                  <TabsTrigger value="playersRanking" className="px-6 py-3">
-                    {t('standings.title')}
-                  </TabsTrigger>
+                  <TabsContent value="playersRanking">
+                    <StandingsTab
+                      tournamentId={id}
+                      tournamentStatus={tournament.status}
+                      roundNumber={tournament.numberOfRounds}
+                    />
+                  </TabsContent>
                 )}
-              </TabsList>
-              <TabsContent value="tournamentInfo">
-                <TournamentDetails tournament={tournament} />
-              </TabsContent>
-              {[...Array(tournament.numberOfRounds)].map((_, i) => (
-                <TabsContent key={`round${i + 1}`} value={`round${i + 1}`}>
-                  <RoundTab
-                    roundNumber={i + 1}
-                    tournamentId={id}
-                    latestRound={tournament.numberOfRounds}
-                    pointsPerMatch={tournament.pointsPerMatch}
-                    courts={tournament.courts.length}
-                    saveScoresAndGenerateRound={saveScoresAndGenerateRound}
-                    finalRound={tournament.finalRound}
-                    tournamentStatus={tournament.status}
-                  />
-                </TabsContent>
-              ))}
-              {tournament.numberOfRounds > 0 && (
-                <TabsContent value="playersRanking">
-                  <StandingsTab
-                    tournamentId={id}
-                    tournamentStatus={tournament.status}
-                    roundNumber={tournament.numberOfRounds}
-                  />
-                </TabsContent>
-              )}
-            </Tabs>
-          </CardContent>
-        </Card>
-        {tournament.status === 'NEW' && (
-          <Button
-            className="mx-auto my-10 px-8 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-lg rounded-md flex items-center gap-2"
-            onClick={() => generateRound(false)}
-          >
-            {t('dashboard.firstRound')}
-          </Button>
-        )}
+              </Tabs>
+            </CardContent>
+          </Card>
+          {tournament.status === 'NEW' && (
+            <Button
+              className="mx-auto my-10 px-8 py-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white text-lg rounded-md flex items-center gap-2"
+              onClick={() => generateRound(false)}
+            >
+              {t('dashboard.firstRound')}
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -137,6 +137,7 @@
     "close": "Zamknij",
     "finished": "Zakończony",
     "inProgress": "W trakcie",
+    "refresh": "Odśwież",
     "nextRound": "Kolejna runda",
     "finalRound": "Runda finałowa",
     "summary": "Postęp rundy: {{completedMatches}}/{{totalMatches}} meczów zakończonych ({{percentCompleted}}%)",
@@ -167,5 +168,8 @@
     "draws": "Remisy",
     "loss": "Przegrane",
     "winsRatio": "% Wygranych"
+  },
+  "errors": {
+    "saveScore": "Nieudana próba zapisuj wyników rundy, prawdopodobnie runda została już zapisana, spróbuj odświeżyć stronę. Jeżeli to nie rozwiąże problemu, kliknij przycisk poniżej i wygeneruj kolejną lub finałową rundę."
   }
 }
