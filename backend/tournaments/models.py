@@ -93,7 +93,7 @@ class Player(models.Model):
     def __str__(self):
         return f"{self.name} ({self.tournament.title})"
 
-class Match(models.Model):
+class  Match(models.Model):
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE, related_name='matches')
 
     round_number = models.PositiveIntegerField(
