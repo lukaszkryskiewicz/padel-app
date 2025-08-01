@@ -191,6 +191,8 @@ class GenerateRoundSerializer(serializers.Serializer):
         tournament = self.context.get('tournament')
         if not tournament:
             raise serializers.ValidationError("Tournament not found.")
+        if tournament.status == Tournament.TournamentStatus.FINISHED:
+            raise serializers.ValidationError("Tournament is marked as finished!")
         # check if there are 4 players and minimum one court
         if tournament.players.count() < 4 or tournament.players.count() % 4 != 0:
             raise serializers.ValidationError("Liczba graczy musi być wielokrotnością 4.")

@@ -144,7 +144,7 @@ class RoundResultsUpdateView(generics.GenericAPIView):
                     "error": "One or more matches have been updated by another user.",
                     "conflict_match_ids": conflict_matches,
                 },
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_409_CONFLICT
             )
 
 
