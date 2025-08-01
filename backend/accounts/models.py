@@ -7,9 +7,12 @@ class CustomUser(AbstractUser):
         USER = "USER", _("User")
         CLUB = "CLUB", _("Club")
 
+    email = models.EmailField(unique=True)
     user_type = models.CharField(choices=UserTypeChoices, default=UserTypeChoices.USER)
-
     club_name = models.CharField(max_length=100, blank=True, null=True, help_text='Club name')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     def is_club_user(self):
         return self.user_type == 'club'
