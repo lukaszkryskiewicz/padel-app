@@ -18,13 +18,17 @@ const Header = () => {
           </Link>
 
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
-              <User className="h-4 w-4 mr-2" />
-              {t('header.login')}
-            </Button>
-            <Button variant="outline" size="sm">
-              {t('header.register')}
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" size="sm">
+                <User className="h-4 w-4 mr-2" />
+                {t('header.login')}
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="outline" size="sm">
+                {t('header.register')}
+              </Button>
+            </Link>
             <Link to="/create">
               <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                 <Plus className="h-4 w-4 mr-2" />

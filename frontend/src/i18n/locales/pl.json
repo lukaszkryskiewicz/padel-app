@@ -169,6 +169,31 @@
     "loss": "Przegrane",
     "winsRatio": "% Wygranych"
   },
+  "auth": {
+    "login": "Zaloguj się",
+    "loginHelper": "Wprowadź swoje dane aby uzyskać dostęp do konta",
+    "email": "Email",
+    "emailPlaceholder": "twojmail@example.com",
+    "pass": "Hasło",
+    "passPlaceholder": "Twoje hasło",
+    "noAccount": "Nie masz konta?",
+    "forgottenPass": "Zapomniałeś hasła?",
+    "logging": "Logowanie",
+    "creating": "Tworzenie...",
+    "back": "Lub wróć do ",
+    "homePage": "strony głównej",
+    "register":"Zarejestruj się",
+    "registerHelper": "Wypełnij formularz aby załozyc nowe konto",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "passCreatePlaceholder": "Hasło (min. 6 znaków)",
+    "confirmPass": "Potwierdź hasło",
+    "alreadyHaveAccount": "Masz juz konto? Zaloguj się",
+    "required": "Wartość wymagana",
+    "passTooShort": "Hasło musi mieć minimum 6 znaków",
+    "emailInvalid": "Nieprawidłowy adres email",
+    "passwordsMustMatch": "Hasła nie są identyczne!"
+  },
   "errors": {
     "saveScore": "Nieudana próba zapisuj wyników rundy, prawdopodobnie runda została już zapisana, spróbuj odświeżyć stronę. Jeżeli to nie rozwiąże problemu, kliknij przycisk poniżej i wygeneruj kolejną lub finałową rundę."
   }
